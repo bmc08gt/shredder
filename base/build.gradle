@@ -1,0 +1,13 @@
+apply from: "$rootProject.projectDir/android-library.gradle"
+
+dependencies {
+    implementation deps.kotlin.stdlib
+    implementation deps.kotlin.coroutinesCore
+    implementation deps.kotlin.coroutinesAndroid
+    implementation deps.kotlin.reflect
+
+    implementation deps.jetpack.appcompat
+    implementation deps.jetpack.corektx
+    implementation deps.jetpack.fragment
+    implementation deps.jetpack.fragment_ktx
+}
