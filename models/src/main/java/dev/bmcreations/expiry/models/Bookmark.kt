@@ -15,11 +15,6 @@ data class Bookmark(
 
     var favicon: String? = null
         private set
-        get() {
-            val httpUrl = url.toHttpUrlOrNull()
-            val scheme = httpUrl?.scheme ?: "http"
-            val host = httpUrl?.host
+        get() = "https://www.google.com/s2/favicons?domain=${url.toHttpUrlOrNull()?.host}"
 
-            return "$scheme://$host/favicon.png"
-        }
 }
