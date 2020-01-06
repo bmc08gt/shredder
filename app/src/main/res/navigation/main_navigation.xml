@@ -6,6 +6,6 @@
 
     <fragment android:id="@+id/home"
             android:name="dev.bmcreations.expiry.features.list.BookmarksListFragment"
-            android:label="@string/title_activity_main">
+            android:label="@string/title_bookmark_list">
     </fragment>
 </navigation>
