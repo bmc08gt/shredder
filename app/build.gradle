@@ -26,6 +26,7 @@ android {
 
 dependencies {
     implementation project(':base')
+    implementation project(':bookmark-bar')
     implementation project(':models')
 
     implementation deps.kotlin.stdlib
