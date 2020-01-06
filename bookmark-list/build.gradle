@@ -1,8 +1,9 @@
 apply from: "$rootProject.projectDir/android-library.gradle"
 
 dependencies {
-    implementation project(':base')
+    implementation project(':base-ui')
     implementation project(':bookmark-bar')
+    implementation project(':core')
     implementation project(':models')
 
     implementation deps.kotlin.stdlib
@@ -22,4 +23,6 @@ dependencies {
     implementation deps.jetpack.navigation_fragment_ktx
     implementation deps.jetpack.navigation_ui
     implementation deps.jetpack.navigation_ui_ktx
+
+    implementation deps.coil
 }

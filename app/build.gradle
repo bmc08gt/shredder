@@ -25,12 +25,14 @@ android {
 }
 
 dependencies {
-    // base imports (extensions, base view layer)
-    implementation project(':base')
-    // bookmark dao
-    implementation project(':bookmark-bar')
+    // Core Components
+    implementation project(':core')
+
     // models
     implementation project(':models')
+
+    // bookmarks
+    implementation project(':bookmark-bar')
 
     // features
     implementation project(':bookmark-list')

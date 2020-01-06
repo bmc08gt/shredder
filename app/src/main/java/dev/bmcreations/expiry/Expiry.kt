@@ -1,23 +1,14 @@
 package dev.bmcreations.expiry
 
 import android.app.Application
-import android.content.Context
-import dev.bmcreations.expiry.di.AppGraph
-import dev.bmcreations.expiry.di.SessionGraphImpl
+import dev.bmcreations.expiry.bar.BookmarksComponentImpl
+import dev.bmcreations.expiry.core.di.ComponentRouter
 
 class Expiry : Application() {
 
-    private val appGraph by lazy {
-        AppGraph(
-            sessionGraph = SessionGraphImpl(this)
-        )
-    }
-
     override fun onCreate() {
-        appGraph // touch the graph
         super.onCreate()
+        ComponentRouter.init(this)
+        ComponentRouter.inject("bookmarks", BookmarksComponentImpl())
     }
 }
-
-val Context.appGraph: AppGraph
-get() = ((this.applicationContext) as Expiry).appGraph

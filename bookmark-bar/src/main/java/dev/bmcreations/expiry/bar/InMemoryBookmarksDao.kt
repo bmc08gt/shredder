@@ -2,8 +2,10 @@ package dev.bmcreations.expiry.bar
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import dev.bmcreations.expiry.base.extensions.daysBetween
-import dev.bmcreations.expiry.base.extensions.startOfDay
+import dev.bmcreations.expiry.core.extensions.daysBetween
+import dev.bmcreations.expiry.core.extensions.now
+import dev.bmcreations.expiry.core.extensions.plusDays
+import dev.bmcreations.expiry.core.extensions.startOfDay
 import dev.bmcreations.expiry.models.Bookmark
 import java.util.*
 
@@ -15,6 +17,20 @@ class InMemoryBookmarksDao : BookmarksDao {
     private val itemsInBar: MutableMap<String, Bookmark> = mutableMapOf()
 
     private val emitter = MutableLiveData<List<Bookmark>>()
+
+    init {
+        itemsInBar.apply {
+            for (i in 0 until 5) {
+                Bookmark(
+                    label = "bookmark $i",
+                    url = "https://bmcreations.dev",
+                    expiration = now.plusDays(60 + i)
+                ).also {
+                    put(it.id, it)
+                }
+            }
+        }
+    }
 
     override suspend fun selectAll(): List<Bookmark> {
         return itemsInBar.values.toList().sortedBy { it.expiration }

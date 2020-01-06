@@ -15,5 +15,11 @@ data class Bookmark(
 
     var favicon: String? = null
         private set
-        get() = url.toHttpUrlOrNull()?.host?.plus("/favicon.ico")
+        get() {
+            val httpUrl = url.toHttpUrlOrNull()
+            val scheme = httpUrl?.scheme ?: "http"
+            val host = httpUrl?.host
+
+            return "$scheme://$host/favicon.png"
+        }
 }
