@@ -7,6 +7,7 @@ import dev.bmcreations.expiry.core.extensions.now
 import dev.bmcreations.expiry.core.extensions.plusDays
 import dev.bmcreations.expiry.core.extensions.startOfDay
 import dev.bmcreations.expiry.models.Bookmark
+import dev.bmcreations.expiry.models.Website
 import java.util.*
 
 /**
@@ -23,7 +24,9 @@ class InMemoryBookmarksDao : BookmarksDao {
             for (i in 0 until 5) {
                 Bookmark(
                     label = "bookmark $i",
-                    url = "https://bmcreations.dev",
+                    site = Website(
+                        url = "https://bmcreations.dev"
+                    ),
                     expiration = now.plusDays(60 + i)
                 ).also {
                     put(it.id, it)
@@ -41,7 +44,7 @@ class InMemoryBookmarksDao : BookmarksDao {
     }
 
     override suspend fun findByUrl(url: String): Bookmark? {
-        return itemsInBar.values.find { it.url == url }
+        return itemsInBar.values.find { it.site?.url == url }
     }
 
     override suspend fun findByLabel(label: String): Bookmark? {

@@ -34,6 +34,9 @@ dependencies {
     // bookmarks
     implementation project(':bookmark-bar')
 
+    // networking
+    implementation project(':network')
+
     // features
     implementation project(':bookmark-list')
 

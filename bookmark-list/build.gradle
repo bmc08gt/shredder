@@ -5,6 +5,7 @@ dependencies {
     implementation project(':bookmark-bar')
     implementation project(':core')
     implementation project(':models')
+    implementation project(':network')
 
     implementation deps.kotlin.stdlib
     implementation deps.kotlin.coroutinesCore
@@ -19,6 +20,7 @@ dependencies {
     implementation deps.jetpack.fragment_ktx
     implementation deps.jetpack.lifecycle_viewmodel_ktx
     implementation deps.jetpack.lifecycle_livedata_ktx
+    implementation deps.jetpack.lifecycle_extensions
     implementation deps.jetpack.navigation_fragment
     implementation deps.jetpack.navigation_fragment_ktx
     implementation deps.jetpack.navigation_ui

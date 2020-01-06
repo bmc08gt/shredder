@@ -1,3 +1,4 @@
+include ':network'
 include ':app'
 include ':core'
 include ':bookmark-bar'

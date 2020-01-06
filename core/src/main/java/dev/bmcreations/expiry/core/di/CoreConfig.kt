@@ -3,7 +3,7 @@ package dev.bmcreations.expiry.core.di
 import android.app.Application
 import dev.bmcreations.expiry.core.preferences.UserPreferences
 
-interface CoreComponent: Component<UserPreferences> {
+interface CoreComponent: Component {
     val app: Application
     val prefs: UserPreferences
 }

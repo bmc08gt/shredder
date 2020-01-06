@@ -2,7 +2,7 @@ package dev.bmcreations.expiry.bar
 
 import dev.bmcreations.expiry.core.di.Component
 
-interface BookmarksComponent: Component<BookmarksBar> {
+interface BookmarksComponent: Component {
     val bar: BookmarksBar
 }
 
