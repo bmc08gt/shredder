@@ -16,6 +16,5 @@ class Expiry : Application() {
         ComponentRouter.inject("webManifest", WebManifestNetworkComponentImpl())
         ComponentRouter.inject("bookmarks", BookmarksComponentImpl())
         ComponentRouter.inject("bookmarks-list", BookmarkListComponentImpl("bookmarks".component()))
-
     }
 }

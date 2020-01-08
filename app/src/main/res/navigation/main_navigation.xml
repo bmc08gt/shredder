@@ -5,7 +5,13 @@
         app:startDestination="@id/home">
 
     <fragment android:id="@+id/home"
-            android:name="dev.bmcreations.expiry.features.list.BookmarksListFragment"
+            android:name="dev.bmcreations.expiry.features.list.view.BookmarksListFragment"
             android:label="@string/title_bookmark_list">
     </fragment>
+
+    <dialog android:id="@+id/create_bookmark"
+        android:name="dev.bmcreations.expiry.features.create.BookmarkCreator"
+        android:label="Create a bookmark">
+        <deepLink app:uri="expiry://create"/>
+    </dialog>
 </navigation>

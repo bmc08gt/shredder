@@ -1,4 +1,4 @@
-package dev.bmcreations.expiry.features.list
+package dev.bmcreations.expiry.features.list.view
 
 import android.os.Bundle
 import android.view.Menu
@@ -7,13 +7,15 @@ import android.view.MenuItem
 import androidx.navigation.fragment.findNavController
 import dev.bmcreations.expiry.base.ui.BaseFragment
 import dev.bmcreations.expiry.core.di.component
+import dev.bmcreations.expiry.features.list.R
+import dev.bmcreations.expiry.features.list.actions.BookmarkListActions
 import dev.bmcreations.expiry.features.list.di.BookmarkListComponent
-import dev.bmcreations.expiry.features.list.view.BookmarkListAdapter
 import kotlinx.android.synthetic.main.fragment_bookmark_list.*
 
 class BookmarksListFragment : BaseFragment() {
 
-    override val layoutResId: Int = R.layout.fragment_bookmark_list
+    override val layoutResId: Int =
+        R.layout.fragment_bookmark_list
 
     private val listAdapter by lazy {
         BookmarkListAdapter(
@@ -34,7 +36,7 @@ class BookmarksListFragment : BaseFragment() {
         listAdapter.submitList(component.bookmarks.bar.bookmarks())
 
         create_fab.setOnClickListener {
-            findNavController().navigate(R.id.open_sheet)
+            BookmarkListActions.openSheet(findNavController())
         }
     }
 

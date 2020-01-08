@@ -6,7 +6,7 @@ import dev.bmcreations.expiry.models.withManifestJson
 import dev.bmcreations.expiry.network.WebManifestService
 
 class NetworkWebManifestRepositoryImpl(
-    val webService: WebManifestService
+    private val webService: WebManifestService
 ) : WebManifestRepository {
     override suspend fun loadManifest(
         url: String,
