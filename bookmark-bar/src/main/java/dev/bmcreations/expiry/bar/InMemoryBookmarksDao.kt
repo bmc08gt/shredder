@@ -52,11 +52,11 @@ class InMemoryBookmarksDao : BookmarksDao {
     }
 
     override suspend fun findByExpiration(date: Date): List<Bookmark> {
-        return itemsInBar.values.filter { it.expiration.startOfDay().daysBetween(date.startOfDay()) == 0 }
+        return itemsInBar.values.filter { it.expiration?.startOfDay()?.daysBetween(date.startOfDay()) == 0 }
     }
 
     override suspend fun findByExpiration(start: Date, end: Date): List<Bookmark> {
-        return itemsInBar.values.filter { it.expiration.after(start) && it.expiration.before(end) }
+        return itemsInBar.values.filter { it.expiration?.after(start) == true && it.expiration?.before(end) == true }
     }
 
     override suspend fun upsert(bookmark: Bookmark) {

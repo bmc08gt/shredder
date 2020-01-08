@@ -9,5 +9,5 @@ data class Bookmark(
     val id: String = UUID.randomUUID().toString(),
     val site: Website?,
     val label: String?,
-    val expiration: Date
+    val expiration: Date? = null
 ) : Parcelable
