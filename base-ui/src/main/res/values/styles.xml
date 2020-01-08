@@ -1,9 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
         <!-- Global color attributes -->
-        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimary">@color/color_secondary</item>
         <item name="colorPrimaryVariant">@color/color_primary_variant</item>
         <item name="colorOnPrimary">@color/color_on_primary</item>
         <item name="colorSecondary">@color/color_secondary</item>
@@ -30,11 +30,13 @@
         <!-- Button widget style attribute -->
         <item name="materialButtonStyle">@style/AppButton</item>
         <!-- Text Field widget style attribute -->
-        <item name="textInputStyle">@style/AppTextField</item>
+        <item name="textInputStyle">@style/AppTextField.Outlined</item>
         <!-- Card widget style attribute -->
         <item name="materialCardViewStyle">@style/AppCard</item>
         <!-- Bottom Navigation widget style attribute -->
         <item name="bottomNavigationStyle">@style/AppBottomNavigation</item>
+        <item name="bottomSheetStyle">@style/AppModalBottomSheet</item>
+        <item name="bottomSheetDialogTheme">@style/AppModalBottomSheet</item>
     </style>
 
     <style name="AppTextAppearance.Chip" parent="TextAppearance.MaterialComponents.Chip">
@@ -79,8 +81,13 @@
         <item name="rippleColor">@color/button_ripple_color</item>
     </style>
 
-    <style name="AppTextField" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
-        <item name="boxBackgroundColor">@color/text_field_background</item>
+    <style name="AppTextField.Outlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">\
+        <item name="hintTextAppearance">@style/AppTextField.Outlined.TextApperance</item>
+    </style>
+
+    <style name="AppTextField.Outlined.TextApperance" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="android:textColor">@color/color_on_surface</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <style name="AppCard" parent="Widget.MaterialComponents.CardView">
@@ -88,5 +95,4 @@
     </style>
 
     <style name="AppBottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView.Colored" />
-
 </resources>

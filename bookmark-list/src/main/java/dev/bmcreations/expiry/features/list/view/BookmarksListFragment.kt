@@ -4,16 +4,11 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
-import dev.bmcreations.expiry.bar.BookmarksComponent
+import androidx.navigation.fragment.findNavController
 import dev.bmcreations.expiry.base.ui.BaseFragment
 import dev.bmcreations.expiry.core.di.component
-import dev.bmcreations.expiry.di.NetworkComponent
-import dev.bmcreations.expiry.di.WebManifestNetworkComponentImpl
 import dev.bmcreations.expiry.features.list.di.BookmarkListComponent
-import dev.bmcreations.expiry.network.repository.WebManifestRepository
+import dev.bmcreations.expiry.features.list.view.BookmarkListAdapter
 import kotlinx.android.synthetic.main.fragment_bookmark_list.*
 
 class BookmarksListFragment : BaseFragment() {
@@ -37,6 +32,10 @@ class BookmarksListFragment : BaseFragment() {
     override fun initView() {
         bookmarks.adapter = listAdapter
         listAdapter.submitList(component.bookmarks.bar.bookmarks())
+
+        create_fab.setOnClickListener {
+            findNavController().navigate(R.id.open_sheet)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {

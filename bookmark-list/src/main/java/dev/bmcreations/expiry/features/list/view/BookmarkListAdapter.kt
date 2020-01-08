@@ -1,4 +1,4 @@
-package dev.bmcreations.expiry.features.list
+package dev.bmcreations.expiry.features.list.view
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,14 +7,22 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
+import dev.bmcreations.expiry.features.list.IconRequest
+import dev.bmcreations.expiry.features.list.R
 import dev.bmcreations.expiry.models.Bookmark
 import kotlinx.android.synthetic.main.bookmark_list_item.view.*
 
 class BookmarkListAdapter(
     val iconRequest: ((IconRequest) -> Unit)
-) : ListAdapter<Bookmark, BookmarkVH>(BOOKMARK_DIFF) {
+) : ListAdapter<Bookmark, BookmarkVH>(
+    BOOKMARK_DIFF
+) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookmarkVH =
-        BookmarkVH.create(parent, viewType, iconRequest)
+        BookmarkVH.create(
+            parent,
+            viewType,
+            iconRequest
+        )
 
     override fun onBindViewHolder(holder: BookmarkVH, position: Int) {
         holder.entity = getItem(position)
@@ -35,31 +43,35 @@ class BookmarkVH(
 
                 // try to load icon from webmanifest first
                 bookmark.site?.url?.let { url ->
-                    iconRequest.invoke(IconRequest(url) { icon ->
-                        if (icon != null) {
-                            itemView.favicon.load(icon) {
-                                crossfade(true)
-                                crossfade(400)
+                    iconRequest.invoke(
+                        IconRequest(
+                            url
+                        ) { icon ->
+                            if (icon != null) {
+                                itemView.favicon.load(icon) {
+                                    crossfade(true)
+                                    crossfade(400)
+                                }
+                            } else {
+                                itemView.favicon.load(bookmark.site?.favicon) {
+                                    crossfade(true)
+                                    crossfade(400)
+                                }
                             }
-                        } else {
-                            itemView.favicon.load(bookmark.site?.favicon)  {
-                                crossfade(true)
-                                crossfade(400)
-                            }
-                        }
-                    })
+                        })
                 }
             }
         }
 
     companion object Factory {
-        fun create(parent: ViewGroup, viewType: Int, iconRequest: (IconRequest) -> Unit): BookmarkVH = BookmarkVH(
-            LayoutInflater.from(parent.context).inflate(
-                R.layout.bookmark_list_item,
-                parent,
-                false
-            ), iconRequest
-        )
+        fun create(parent: ViewGroup, viewType: Int, iconRequest: (IconRequest) -> Unit): BookmarkVH =
+            BookmarkVH(
+                LayoutInflater.from(parent.context).inflate(
+                    R.layout.bookmark_list_item,
+                    parent,
+                    false
+                ), iconRequest
+            )
     }
 }
 
