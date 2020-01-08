@@ -37,7 +37,7 @@ class BookmarkVH(
         set(value) {
             field = value
             value?.let { bookmark ->
-                itemView.label.text = bookmark.label
+                itemView.label.text = bookmark.title
                 itemView.url.text = bookmark.site?.url
 
                 // try to load icon from webmanifest first

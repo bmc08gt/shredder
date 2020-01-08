@@ -8,6 +8,6 @@ import java.util.*
 data class Bookmark(
     val id: String = UUID.randomUUID().toString(),
     val site: Website?,
-    val label: String?,
+    val title: String?,
     val expiration: Date? = null
 ) : Parcelable

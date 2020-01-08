@@ -23,7 +23,7 @@ class InMemoryBookmarksDao : BookmarksDao {
         itemsInBar.apply {
             for (i in 0 until 5) {
                 Bookmark(
-                    label = "bookmark $i",
+                    title = "bookmark $i",
                     site = Website(
                         url = "https://bmcreations.dev"
                     ),
@@ -47,8 +47,8 @@ class InMemoryBookmarksDao : BookmarksDao {
         return itemsInBar.values.find { it.site?.url == url }
     }
 
-    override suspend fun findByLabel(label: String): Bookmark? {
-        return itemsInBar.values.find { it.label == label }
+    override suspend fun findByTitle(title: String): Bookmark? {
+        return itemsInBar.values.find { it.title == title }
     }
 
     override suspend fun findByExpiration(date: Date): List<Bookmark> {
