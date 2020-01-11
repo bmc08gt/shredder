@@ -5,10 +5,10 @@ import kotlinx.android.parcel.Parcelize
 import java.util.*
 
 @Parcelize
-data class Bookmark(
+data class Group(
     val id: String = UUID.randomUUID().toString(),
-    val site: Website?,
-    val title: String?,
-    val expiration: Date? = null,
-    val group: Group? = null
-) : Parcelable
+    val name: String,
+    val createdAt: Date = Date(),
+    val updatedAt: Date = createdAt,
+    val bookmarks: List<Bookmark> = emptyList()
+): Parcelable

@@ -1,4 +1,4 @@
-package dev.bmcreations.expiry.bar
+package dev.bmcreations.expiry.bar.bookmarks
 
 import androidx.lifecycle.LiveData
 import dev.bmcreations.expiry.models.Bookmark
@@ -13,6 +13,8 @@ interface BookmarksDao {
 
     suspend fun selectAllStream(): LiveData<List<Bookmark>>
 
+    suspend fun findById(id: String): Bookmark?
+
     suspend fun findByUrl(url: String): Bookmark?
 
     suspend fun findByTitle(title: String): Bookmark?
@@ -21,9 +23,9 @@ interface BookmarksDao {
 
     suspend fun findByExpiration(start: Date, end: Date): List<Bookmark>
 
-    suspend fun upsert(bookmark: Bookmark)
+    suspend fun upsert(vararg bookmark: Bookmark)
 
-    suspend fun remove(bookmark: Bookmark)
+    suspend fun remove(vararg bookmark: Bookmark)
     suspend fun remove(id: String)
 
     suspend fun empty()

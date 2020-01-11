@@ -67,10 +67,18 @@
     <!-- See: https://issuetracker.google.com/issues/127453566 -->
 
     <style name="AppChip" parent="Widget.MaterialComponents.Chip.Action">
+        <item name="android:textColor">@color/color_on_secondary</item>
+        <item name="chipBackgroundColor">@color/color_secondary</item>
+        <item name="chipIconTint">@color/color_on_secondary</item>
+        <item name="closeIconTint">@color/color_on_secondary</item>
         <item name="android:textAppearance">@style/AppTextAppearance.Chip</item>
     </style>
 
     <style name="AppChip.Standalone" parent="Widget.MaterialComponents.Chip.Entry">
+        <item name="android:textColor">@color/color_on_secondary</item>
+        <item name="chipIconTint">@color/color_on_secondary</item>
+        <item name="closeIconTint">@color/color_on_secondary</item>
+        <item name="chipBackgroundColor">@color/color_secondary</item>
         <item name="android:textAppearance">@style/AppTextAppearance.Chip</item>
     </style>
 

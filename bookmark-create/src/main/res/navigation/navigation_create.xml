@@ -4,9 +4,25 @@
     android:id="@+id/navigation_create"
     app:startDestination="@id/create">
 
-    <fragment android:id="@+id/create" android:name="dev.bmcreations.expiry.features.create.BookmarkCreateFragment"
+    <fragment
+        android:id="@+id/create"
+        android:name="dev.bmcreations.expiry.features.create.BookmarkCreateFragment"
         android:label="Create a bookmark">
 
+        <action android:id="@+id/create_a_group" app:destination="@id/create_group" />
+        <action android:id="@+id/remove_a_group" app:destination="@id/remove_group" />
+
     </fragment>
+
+    <dialog
+        android:id="@+id/create_group"
+        android:name="dev.bmcreations.expiry.features.create.dialogs.CreateGroupDialog" />
+
+    <dialog
+        android:id="@+id/remove_group"
+        android:name="dev.bmcreations.expiry.features.create.dialogs.RemoveGroupDialog">
+        <argument android:name="group"
+            app:argType="dev.bmcreations.expiry.models.Group" />
+    </dialog>
 
 </navigation>

@@ -10,7 +10,7 @@ class WebManifestNetworkComponentImpl(
     networkConfig = NetworkConfig(
         baseUrl = "https://bmcreations.dev" // this get's hot swapped via @Url annotation,
     ),
-    interceptors = listOf(HttpLoggingInterceptor()),
+    interceptors = listOf(HttpLoggingInterceptor().apply { this.level = HttpLoggingInterceptor.Level.BODY }),
     converters = listOf(GsonConverterFactory.create()),
     callAdapters = listOf(CoroutineCallAdapterFactory.invoke())
 )

@@ -26,3 +26,10 @@ object ComponentRouter {
 }
 
 fun <T> String.component() = ComponentRouter.component(this) as T
+
+object Components {
+    const val WEB_MANIFEST = "webManifest"
+    const val BOOKMARKS = "bookmarks"
+    const val BOOKMARKS_LIST = "bookmarks-list"
+    const val BOOKMARKS_CREATE = "bookmark-create"
+}

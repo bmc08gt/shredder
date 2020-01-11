@@ -4,13 +4,18 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dev.bmcreations.expiry.base.ui.BaseFragment
+import dev.bmcreations.expiry.core.di.Components
+import dev.bmcreations.expiry.core.di.Components.BOOKMARKS_LIST
 import dev.bmcreations.expiry.core.di.component
 import dev.bmcreations.expiry.features.list.R
 import dev.bmcreations.expiry.features.list.actions.BookmarkListActions
 import dev.bmcreations.expiry.features.list.di.BookmarkListComponent
 import kotlinx.android.synthetic.main.fragment_bookmark_list.*
+import kotlinx.coroutines.launch
 
 class BookmarksListFragment : BaseFragment() {
 
@@ -24,7 +29,7 @@ class BookmarksListFragment : BaseFragment() {
     }
 
     private val component
-        get() = "bookmarks-list".component<BookmarkListComponent>()
+        get() = BOOKMARKS_LIST.component<BookmarkListComponent>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +38,11 @@ class BookmarksListFragment : BaseFragment() {
 
     override fun initView() {
         bookmarks.adapter = listAdapter
-        listAdapter.submitList(component.bookmarks.bar.bookmarks())
+        lifecycleScope.launch {
+            component.bookmarks.bar.observeBookmarks().observe(viewLifecycleOwner, Observer {
+                listAdapter.submitList(it)
+            })
+        }
 
         create_fab.setOnClickListener {
             BookmarkListActions.openSheet(findNavController())

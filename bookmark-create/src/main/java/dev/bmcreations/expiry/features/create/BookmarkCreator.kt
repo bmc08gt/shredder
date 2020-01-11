@@ -3,13 +3,16 @@ package dev.bmcreations.expiry.features.create
 import android.app.Dialog
 import android.graphics.Rect
 import android.os.Bundle
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -19,13 +22,19 @@ import dev.bmcreations.expiry.core.extensions.dp
 import dev.bmcreations.expiry.core.lifecycle.ProvidedArguments
 import kotlinx.android.synthetic.main.dialog_bookmark_creator.*
 
-class BookmarkCreator : BottomSheetDialogFragment() {
+interface OnBookmarkCreatedListener {
+    fun onBookmarkCreated()
+}
+
+class BookmarkCreator : BottomSheetDialogFragment(), OnBookmarkCreatedListener {
 
     private val providedArguments by lazy {
         val url = arguments?.getString(URL)
         val label = arguments?.getString(LABEL)
         Args(url, label)
     }
+
+    private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +59,8 @@ class BookmarkCreator : BottomSheetDialogFragment() {
         childFragmentManager.beginTransaction().replace(R.id.navHost, navHost)
             .commitNow()
 
+        navController = navHost.navController
+
         navHost.navController.setGraph(R.navigation.navigation_create)
         toolbar.setupWithNavController(navHost.navController)
     }
@@ -69,20 +80,20 @@ class BookmarkCreator : BottomSheetDialogFragment() {
                 }
                 bottomSheet.layoutParams?.height = maxHeight
             }
-//            // Normally the dialog would close on back press. We override this behaviour and check if we can navigate back
-//            // If we can't navigate back we return false triggering the default implementation closing the dialog
-//            setOnKeyListener { _, keyCode, event ->
-//                if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
-//                    val popped = navController.popBackStack()
-//                    if (popped) {
-//                        true
-//                    } else {
-//                        findNavController().popBackStack()
-//                    }
-//                } else {
-//                    false
-//                }
-//            }
+            // Normally the dialog would close on back press. We override this behaviour and check if we can navigate back
+            // If we can't navigate back we return false triggering the default implementation closing the dialog
+            setOnKeyListener { _, keyCode, event ->
+                if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                    val popped = navController.popBackStack()
+                    if (popped) {
+                        true
+                    } else {
+                        findNavController().popBackStack()
+                    }
+                } else {
+                    false
+                }
+            }
         }
     }
 
@@ -96,6 +107,13 @@ class BookmarkCreator : BottomSheetDialogFragment() {
 
         const val URL = "url"
         const val LABEL = "label"
+    }
+
+    override fun onBookmarkCreated() {
+        val popped = navController.popBackStack()
+        if (!popped) {
+            findNavController().popBackStack()
+        }
     }
 }
 

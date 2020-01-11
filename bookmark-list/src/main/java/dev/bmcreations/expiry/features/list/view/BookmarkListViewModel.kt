@@ -26,7 +26,10 @@ class BookmarkListViewModel private constructor(
                         val iconUri = manifestResult.body.highestResIcon?.src
                         request.result(request.url.plus(iconUri))
                     }
-                    is NetworkResult.Failure -> Log.e("BookmarkList", "${manifestResult.errorResponse}")
+                    is NetworkResult.Failure -> {
+                        Log.e("BookmarkList", "${manifestResult.errorResponse}")
+                        request.result(null)
+                    }
                 }.exhaustive
             }
         }

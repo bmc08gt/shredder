@@ -1,4 +1,4 @@
-package dev.bmcreations.expiry.bar
+package dev.bmcreations.expiry.bar.bookmarks
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,12 +8,15 @@ import dev.bmcreations.expiry.core.extensions.plusDays
 import dev.bmcreations.expiry.core.extensions.startOfDay
 import dev.bmcreations.expiry.models.Bookmark
 import dev.bmcreations.expiry.models.Website
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.*
 
 /**
  * In memory implementation of our [BookmarksDao]
  */
-class InMemoryBookmarksDao : BookmarksDao {
+class InMemoryBookmarksDao : BookmarksDao, CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
     private val itemsInBar: MutableMap<String, Bookmark> = mutableMapOf()
 
@@ -32,6 +35,7 @@ class InMemoryBookmarksDao : BookmarksDao {
                     put(it.id, it)
                 }
             }
+            emit()
         }
     }
 
@@ -41,6 +45,10 @@ class InMemoryBookmarksDao : BookmarksDao {
 
     override suspend fun selectAllStream(): LiveData<List<Bookmark>> {
         return emitter
+    }
+
+    override suspend fun findById(id: String): Bookmark? {
+        return itemsInBar.values.find { it.id == id }
     }
 
     override suspend fun findByUrl(url: String): Bookmark? {
@@ -59,13 +67,13 @@ class InMemoryBookmarksDao : BookmarksDao {
         return itemsInBar.values.filter { it.expiration?.after(start) == true && it.expiration?.before(end) == true }
     }
 
-    override suspend fun upsert(bookmark: Bookmark) {
-        itemsInBar[bookmark.id] = bookmark
+    override suspend fun upsert(vararg bookmark: Bookmark) {
+        bookmark.forEach { itemsInBar[it.id] = it }
         emit()
     }
 
-    override suspend fun remove(bookmark: Bookmark) {
-        itemsInBar.remove(bookmark.id)
+    override suspend fun remove(vararg bookmark: Bookmark) {
+        bookmark.forEach { itemsInBar.remove(it.id) }
         emit()
     }
 
@@ -79,7 +87,7 @@ class InMemoryBookmarksDao : BookmarksDao {
         emit()
     }
 
-    private suspend fun emit() {
-        emitter.value = selectAll()
+    private fun emit() {
+        launch { emitter.value = selectAll() }
     }
 }
