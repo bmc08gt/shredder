@@ -111,6 +111,7 @@ class BookmarkCreateFragment: BaseFragment() {
             }
             addView(createGroup)
         }
+        chips.isSingleSelection = true
     }
 
 }
