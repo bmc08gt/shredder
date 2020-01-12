@@ -3,10 +3,6 @@ package dev.bmcreations.expiry.core.architecture
 import android.content.Context
 import androidx.annotation.StringRes
 
-open class Request
-open class Result
-
-
 data class Error(
     val exception: Throwable? = null,
     val titleString: String? = null,

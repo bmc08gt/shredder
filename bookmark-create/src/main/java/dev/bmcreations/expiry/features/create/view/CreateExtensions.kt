@@ -1,9 +1,10 @@
-package dev.bmcreations.expiry.features.create
+package dev.bmcreations.expiry.features.create.view
 
 import android.content.Context
 import android.widget.CompoundButton
 import com.google.android.material.chip.Chip
 import dev.bmcreations.expiry.core.extensions.drawables
+import dev.bmcreations.expiry.features.create.R
 import dev.bmcreations.expiry.models.Group
 
 fun Group.toChip(

@@ -9,17 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dev.bmcreations.expiry.core.di.Components
+import dev.bmcreations.expiry.core.di.component
 import dev.bmcreations.expiry.core.extensions.dp
 import dev.bmcreations.expiry.core.lifecycle.ProvidedArguments
+import dev.bmcreations.expiry.features.create.di.BookmarkCreateComponent
+import dev.bmcreations.expiry.features.create.view.BookmarkCreateViewState
 import kotlinx.android.synthetic.main.dialog_bookmark_creator.*
 
 interface OnBookmarkCreatedListener {
@@ -27,6 +30,9 @@ interface OnBookmarkCreatedListener {
 }
 
 class BookmarkCreator : BottomSheetDialogFragment(), OnBookmarkCreatedListener {
+
+    private val createComponent
+        get() = Components.BOOKMARKS_CREATE.component<BookmarkCreateComponent>()
 
     private val providedArguments by lazy {
         val url = arguments?.getString(URL)
@@ -63,6 +69,14 @@ class BookmarkCreator : BottomSheetDialogFragment(), OnBookmarkCreatedListener {
 
         navHost.navController.setGraph(R.navigation.navigation_create)
         toolbar.setupWithNavController(navHost.navController)
+
+        createComponent.viewModel.state.observe(viewLifecycleOwner, Observer {
+            it.content()?.let { state ->
+                if (state.result is BookmarkCreateViewState.StateResult.Created) {
+                    dismiss()
+                }
+            }
+        })
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

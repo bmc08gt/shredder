@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/create"
-        android:name="dev.bmcreations.expiry.features.create.BookmarkCreateFragment"
+        android:name="dev.bmcreations.expiry.features.create.view.BookmarkCreateFragment"
         android:label="Create a bookmark">
 
         <action android:id="@+id/create_a_group" app:destination="@id/create_group" />

@@ -1,20 +1,23 @@
-package dev.bmcreations.expiry.features.create
+package dev.bmcreations.expiry.features.create.view
 
 import android.content.Context
 import android.widget.Toast
-import androidx.core.view.forEach
 import androidx.core.view.get
 import androidx.core.view.size
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.chip.Chip
 import dev.bmcreations.expiry.base.ui.BaseFragment
+import dev.bmcreations.expiry.core.architecture.Error
 import dev.bmcreations.expiry.core.di.Components.BOOKMARKS_CREATE
 import dev.bmcreations.expiry.core.di.component
+import dev.bmcreations.expiry.features.create.OnBookmarkCreatedListener
+import dev.bmcreations.expiry.features.create.R
 import dev.bmcreations.expiry.features.create.actions.BookmarkCreateActions
 import dev.bmcreations.expiry.features.create.di.BookmarkCreateComponent
+import dev.bmcreations.expiry.features.create.view.BookmarkCreateViewState.StateRequest
+import dev.bmcreations.expiry.features.create.view.BookmarkCreateViewState.StateResult
 import dev.bmcreations.expiry.models.Group
 import kotlinx.android.synthetic.main.fragment_bookmark_create.*
 
@@ -42,17 +45,41 @@ class BookmarkCreateFragment: BaseFragment() {
         }
 
         save.setOnClickListener {
-           create.viewModel.createBookmark(
+            create.viewModel.createBookmark(
                 title = label.editText?.text.toString(),
                 url = url.editText?.text.toString(),
-                group = findGroup()) { created ->
-               if (created) {
-                   onBookmarkCreated?.onBookmarkCreated()
-               } else {
-                   Toast.makeText(context, "Failed to create bookmark", Toast.LENGTH_SHORT).show()
-               }
-           }
+                group = findGroup()
+            )
         }
+
+        observe()
+    }
+
+    private fun observe() {
+        create.viewModel.state.observe(this, Observer {
+            it.content()?.let { state ->
+                when {
+                    state.loading -> {}
+                    state.request != StateRequest.None-> handleRequest(state.request)
+                    state.result != StateResult.None -> handleResult(state.result)
+                    state.error.hasErrors() -> handleError(state.error)
+                }
+            }
+        })
+    }
+
+    private fun handleRequest(request: StateRequest) {
+        when (request) {
+            is StateRequest.InitialLoad -> create.viewModel.loadBookmark(request.bookmarkId)
+        }
+    }
+
+    private fun handleResult(result: StateResult) {
+
+    }
+
+    private fun handleError(error: Error) {
+        context?.let { Toast.makeText(it, error.message(it), Toast.LENGTH_SHORT).show() }
     }
 
     private fun findGroup(): Group? {

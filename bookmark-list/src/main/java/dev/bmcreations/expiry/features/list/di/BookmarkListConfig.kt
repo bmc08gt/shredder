@@ -5,7 +5,7 @@ import dev.bmcreations.expiry.core.di.Component
 import dev.bmcreations.expiry.core.di.Components
 import dev.bmcreations.expiry.core.di.component
 import dev.bmcreations.expiry.di.NetworkComponent
-import dev.bmcreations.expiry.features.list.BookmarkListViewModel
+import dev.bmcreations.expiry.features.list.view.BookmarkListViewModel
 import dev.bmcreations.expiry.network.repository.WebManifestRepository
 
 interface BookmarkListComponent: Component {

@@ -1,4 +1,4 @@
-package dev.bmcreations.expiry.features.list
+package dev.bmcreations.expiry.features.list.view
 
 import android.util.Log
 import androidx.lifecycle.ViewModel

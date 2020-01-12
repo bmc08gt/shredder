@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
-import dev.bmcreations.expiry.features.list.IconRequest
 import dev.bmcreations.expiry.features.list.R
 import dev.bmcreations.expiry.models.Bookmark
 import kotlinx.android.synthetic.main.bookmark_list_item.view.*
