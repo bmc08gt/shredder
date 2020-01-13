@@ -35,7 +35,7 @@
         <item name="materialCardViewStyle">@style/AppCard</item>
         <!-- Bottom Navigation widget style attribute -->
         <item name="bottomNavigationStyle">@style/AppBottomNavigation</item>
-        <item name="bottomSheetStyle">@style/AppModalBottomSheet</item>
+<!--        <item name="bottomSheetStyle">@style/AppModalBottomSheet</item>-->
         <item name="bottomSheetDialogTheme">@style/AppModalBottomSheet</item>
     </style>
 
@@ -60,7 +60,7 @@
 
     <style name="AppShapeAppearance.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
         <item name="cornerFamily">rounded</item>
-        <item name="cornerSize">8dp</item>
+        <item name="cornerSize">16dp</item>
     </style>
 
     <!-- NOTE: Chips don't seem to pick up on the theme fontFamily attributes, so these styles are necessary -->
