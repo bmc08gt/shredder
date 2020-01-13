@@ -11,5 +11,5 @@ interface CoreComponent: Component {
 class CoreComponentImpl(
     override val app: Application
 ): CoreComponent {
-    override val prefs get() = UserPreferences(app)
+    override val prefs = UserPreferences(app)
 }
