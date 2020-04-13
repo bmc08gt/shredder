@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.textview.MaterialTextView android:id="@+id/calendarDayText"
+    android:layout_width="18dp"
+    android:layout_height="20dp"
+    android:gravity="center"
+    tools:text="22"
+    android:background="@drawable/date_selector_bg"
+    tools:backgroundTint="@color/color_secondary"
+    android:textColor="@color/color_on_surface"
+    android:padding="1dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" />

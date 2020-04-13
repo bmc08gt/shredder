@@ -9,10 +9,31 @@
         android:name="dev.bmcreations.expiry.features.create.view.BookmarkCreateFragment"
         android:label="Create a bookmark">
 
-        <action android:id="@+id/create_a_group" app:destination="@id/create_group" />
-        <action android:id="@+id/remove_a_group" app:destination="@id/remove_group" />
+        <argument android:name="id" app:argType="string" app:nullable="true" />
+
+        <action
+            android:id="@+id/create_a_group"
+            app:destination="@id/create_group" />
+        <action
+            android:id="@+id/remove_a_group"
+            app:destination="@id/remove_group" />
+        <action
+            android:id="@+id/select_an_expiration"
+            app:destination="@+id/expiration_selection"
+            app:enterAnim="@anim/enter_from_right"
+            app:exitAnim="@anim/exit_to_right"
+            app:popEnterAnim="@anim/enter_from_right"
+            app:popExitAnim="@anim/exit_to_right" />
+        <action
+            android:id="@+id/remove_expiration"
+            app:destination="@id/remove_expiration" />
 
     </fragment>
+
+    <fragment
+        android:id="@+id/expiration_selection"
+        android:name="dev.bmcreations.expiry.features.create.view.calendar.BookmarkExpirationSelectionFragment"
+        android:label="Select an expiration date" />
 
     <dialog
         android:id="@+id/create_group"
@@ -21,8 +42,13 @@
     <dialog
         android:id="@+id/remove_group"
         android:name="dev.bmcreations.expiry.features.create.dialogs.RemoveGroupDialog">
-        <argument android:name="group"
+        <argument
+            android:name="group"
             app:argType="dev.bmcreations.expiry.models.Group" />
     </dialog>
+
+    <dialog
+        android:id="@id/remove_expiration"
+        android:name="dev.bmcreations.expiry.features.create.dialogs.RemoveExpirationDialog" />
 
 </navigation>

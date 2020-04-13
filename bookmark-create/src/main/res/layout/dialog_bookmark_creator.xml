@@ -17,6 +17,7 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
+            android:theme="@style/AppTheme.ModalSheet.Toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/color_secondary"
@@ -27,7 +28,6 @@
         android:id="@+id/navHost"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/color_secondary"
         android:layout_marginTop="18dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 

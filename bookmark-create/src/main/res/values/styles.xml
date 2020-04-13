@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="AppChip.YearMonth" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="android:textColor">@color/year_month_chip_text</item>
+        <item name="chipBackgroundColor">@color/year_month_chip_selector</item>
+        <item name="chipIconTint">@color/year_month_chip_selector</item>
+        <item name="closeIconTint">@color/year_month_chip_selector</item>
+        <item name="android:textAppearance">@style/AppTextAppearance.Chip</item>
+    </style>
+
+    <style name="AppTheme.ModalSheet.Toolbar" parent="Widget.MaterialComponents.ActionBar.Primary">
+        <item name="colorControlNormal">@color/color_on_secondary</item>
+    </style>
+</resources>

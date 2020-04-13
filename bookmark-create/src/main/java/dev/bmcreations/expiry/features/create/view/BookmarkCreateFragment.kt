@@ -1,13 +1,12 @@
 package dev.bmcreations.expiry.features.create.view
 
 import android.content.Context
+import android.os.Bundle
 import android.widget.Toast
-import androidx.core.view.get
-import androidx.core.view.size
+import androidx.core.widget.doAfterTextChanged
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
-import com.google.android.material.chip.Chip
 import dev.bmcreations.expiry.base.ui.BaseFragment
 import dev.bmcreations.expiry.core.architecture.Error
 import dev.bmcreations.expiry.core.di.Components.BOOKMARKS_CREATE
@@ -16,10 +15,10 @@ import dev.bmcreations.expiry.features.create.OnBookmarkCreatedListener
 import dev.bmcreations.expiry.features.create.R
 import dev.bmcreations.expiry.features.create.actions.BookmarkCreateActions
 import dev.bmcreations.expiry.features.create.di.BookmarkCreateComponent
-import dev.bmcreations.expiry.features.create.view.BookmarkCreateViewState.StateRequest
-import dev.bmcreations.expiry.features.create.view.BookmarkCreateViewState.StateResult
 import dev.bmcreations.expiry.models.Group
 import kotlinx.android.synthetic.main.fragment_bookmark_create.*
+import kotlinx.coroutines.launch
+import java.util.*
 
 class BookmarkCreateFragment: BaseFragment() {
 
@@ -36,60 +35,52 @@ class BookmarkCreateFragment: BaseFragment() {
         }
     }
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        create.viewModel.loadBookmark(arguments?.getString("id"))
+    }
+
     override fun initView() {
-        updateGroups()
-        lifecycleScope.launchWhenCreated {
+        lifecycleScope.launchWhenResumed {
             create.viewModel.groups().observe(viewLifecycleOwner, Observer {
                 updateGroups(it ?: emptyList())
             })
+            updateGroups()
         }
 
-        save.setOnClickListener {
-            create.viewModel.createBookmark(
-                title = label.editText?.text.toString(),
-                url = url.editText?.text.toString(),
-                group = findGroup()
-            )
-        }
+        save.setOnClickListener { create.viewModel.createBookmark() }
 
         observe()
     }
 
     private fun observe() {
-        create.viewModel.state.observe(this, Observer {
-            it.content()?.let { state ->
-                when {
-                    state.loading -> {}
-                    state.request != StateRequest.None-> handleRequest(state.request)
-                    state.result != StateResult.None -> handleResult(state.result)
-                    state.error.hasErrors() -> handleError(state.error)
+        create.viewModel.state.observe(viewLifecycleOwner, Observer { state ->
+            when {
+                state.loading.isLoading() -> {}
+                state.error.hasErrors() -> handleError(state.error)
+                else -> {
+                    val data = state.data
+                    label.editText?.setText(data.title)
+                    url.editText?.setText(data.url)
+                    lifecycleScope.launch {
+                        create.viewModel.groups().value.let {
+                            updateGroups(it ?: emptyList())
+                        }
+                    }
+                    loadExpiration(data.expiration)
+                    label.editText?.doAfterTextChanged { text ->
+                        create.viewModel.updateLabel(text?.toString())
+                    }
+                    url.editText?.doAfterTextChanged { text ->
+                        create.viewModel.updateUrl(text?.toString())
+                    }
                 }
             }
         })
     }
 
-    private fun handleRequest(request: StateRequest) {
-        when (request) {
-            is StateRequest.InitialLoad -> create.viewModel.loadBookmark(request.bookmarkId)
-        }
-    }
-
-    private fun handleResult(result: StateResult) {
-
-    }
-
     private fun handleError(error: Error) {
         context?.let { Toast.makeText(it, error.message(it), Toast.LENGTH_SHORT).show() }
-    }
-
-    private fun findGroup(): Group? {
-        for (i in 0 until chips.size) {
-            val chip = chips[i] as Chip
-            if (chip.isChecked) {
-                return chip.tag as Group
-            }
-        }
-        return null
     }
 
     private fun updateGroups(groups: List<Group> = emptyList()) {
@@ -103,15 +94,22 @@ class BookmarkCreateFragment: BaseFragment() {
                     onRemove = { BookmarkCreateActions.removeGroup(findNavController(), it) })
                 )
             }
-
-            val createGroup = Chip(context).apply {
-                text = "Create new"
-                isClickable = true
-                setOnClickListener { BookmarkCreateActions.createGroup(findNavController()) }
-            }
-            addView(createGroup)
+            addView(context.createNewGroupChip())
         }
         chips.isSingleSelection = true
+    }
+
+    private fun loadExpiration(date: Date? = null) {
+        expiration_chip_group.apply {
+            removeAllViews()
+            if (date == null) {
+                addView(context.setExpirationChip())
+            } else {
+                expiration_chip_group.addView(date.toChip(context = context) {
+                    BookmarkCreateActions.removeExpiration(findNavController())
+                })
+            }
+        }
     }
 
 }

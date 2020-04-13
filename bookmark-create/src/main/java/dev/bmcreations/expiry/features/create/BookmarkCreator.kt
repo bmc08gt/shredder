@@ -17,11 +17,13 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import dev.bmcreations.expiry.core.architecture.observe
 import dev.bmcreations.expiry.core.di.Components
 import dev.bmcreations.expiry.core.di.component
 import dev.bmcreations.expiry.core.extensions.dp
 import dev.bmcreations.expiry.core.lifecycle.ProvidedArguments
 import dev.bmcreations.expiry.features.create.di.BookmarkCreateComponent
+import dev.bmcreations.expiry.features.create.view.BookmarkCreateAction
 import dev.bmcreations.expiry.features.create.view.BookmarkCreateViewState
 import kotlinx.android.synthetic.main.dialog_bookmark_creator.*
 
@@ -70,17 +72,16 @@ class BookmarkCreator : BottomSheetDialogFragment(), OnBookmarkCreatedListener {
         navHost.navController.setGraph(R.navigation.navigation_create)
         toolbar.setupWithNavController(navHost.navController)
 
-        createComponent.viewModel.state.observe(viewLifecycleOwner, Observer {
-            it.content()?.let { state ->
-                if (state.result is BookmarkCreateViewState.StateResult.Created) {
-                    dismiss()
-                }
+        createComponent.viewModel.actions.observe(viewLifecycleOwner, Observer {
+            when (it) {
+                is BookmarkCreateAction.Created -> dismiss()
             }
         })
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return super.onCreateDialog(savedInstanceState).apply {
+            theme
             setOnShowListener { dialog ->
                 val d = dialog as BottomSheetDialog
                 val bottomSheet =

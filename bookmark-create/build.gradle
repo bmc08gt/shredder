@@ -27,4 +27,6 @@ dependencies {
     implementation deps.jetpack.navigation_ui_ktx
 
     implementation deps.coil
+
+    implementation deps.calendar
 }
