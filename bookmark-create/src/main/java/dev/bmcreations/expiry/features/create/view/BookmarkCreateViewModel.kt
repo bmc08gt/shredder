@@ -1,17 +1,15 @@
 package dev.bmcreations.expiry.features.create.view
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import dev.bmcreations.expiry.core.architecture.*
 import dev.bmcreations.expiry.features.create.usecases.*
-import dev.bmcreations.expiry.features.create.view.BookmarkCreateViewState.StateRequest
-import dev.bmcreations.expiry.features.create.view.BookmarkCreateViewState.StateResult
+import dev.bmcreations.expiry.features.create.view.calendar.toDate
 import dev.bmcreations.expiry.models.Bookmark
 import dev.bmcreations.expiry.models.Group
+import dev.bmcreations.expiry.models.Website
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import org.threeten.bp.LocalDate
 import java.util.*
 
 class BookmarkCreateViewModel private constructor(
@@ -19,42 +17,37 @@ class BookmarkCreateViewModel private constructor(
     private val getGroupsUseCase: GetGroupsLiveDataUsecase,
     private val getSelectedGroupUseCase: GetSelectedGroupUsecase,
     private val setSelectedGroupUseCase: SelectGroupUsecase,
+    private val getTitleUseCase: GetTitleUsecase,
+    private val setTitleUseCase: SetTitleUsecase,
+    private val getUrlUseCase: GetUrlUsecase,
+    private val setUrlUseCase: SetUrlUsecase,
+    private val getExpirationDateUseCase: GetExpirationDateUsecase,
+    private val setExpirationDateUseCase: SetExpirationDateUsecase,
     private val createBookmarkUseCase: CreateBookmarkUsecase
-) : BaseViewModel<BookmarkCreateViewState>(),
-    ViewStateRequestImpl<StateRequest>,
-    ViewStateResultImpl<StateResult>, CoroutineScope by CoroutineScope(Dispatchers.Main) {
-
-    val state: MutableLiveData<Event<BookmarkCreateViewState>> = MutableLiveData()
+) : BaseViewModel<BookmarkCreateViewState, BookmarkCreateEvent, BookmarkCreateAction>(),
+    CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
     init {
-        state.value = Event(BookmarkCreateViewState(loading = true))
+        state.value = BookmarkCreateViewState(Loading(loading = true))
     }
 
-    fun createBookmark(
-        title: String,
-        url: String,
-        expiration: Date? = null,
-        group: Group? = null
-    ) {
-        createBookmarkUseCase.execute(title, url, expiration, group) {
-            viewModelScope.launch {
-                if (it != null ) {
-                    informOfResult(StateResult.Created(Success()))
-                } else {
-                    informOfError(title = "Error", message = "Failed to create bookmark.")
-                }
+    fun createBookmark() {
+        createBookmarkUseCase.execute {
+            if (it != null) {
+                actionEmitter.emit(BookmarkCreateAction.Created(it))
+            } else {
+                informOfError(title = "Error", message = "Failed to create bookmark.")
             }
         }
     }
 
     fun loadBookmark(id: String?) {
-        loadBookmarkUseCase.execute(id) {
-
-        }
+        loadBookmarkUseCase.execute(id) { populate() }
     }
 
     fun selectGroup(group: Group) {
         setSelectedGroupUseCase.execute(group)
+        populate()
     }
 
     fun selectedGroup(): Group? {
@@ -63,23 +56,32 @@ class BookmarkCreateViewModel private constructor(
 
     suspend fun groups(): LiveData<List<Group>> = getGroupsUseCase.execute()
 
-    override fun informOfResult(result: StateResult) {
-        state.value = Event(
-            BookmarkCreateViewState(
-                loading = false,
-                request = StateRequest.None,
-                result = result
-            )
-        )
+    fun onExpirationSet(date: LocalDate?) {
+        date?.toDate().apply {
+            setExpirationDateUseCase.execute(this)
+            populate()
+        }
     }
 
-    override fun informOfRequest(request: StateRequest) {
-        state.value = Event(
-            BookmarkCreateViewState(
-                loading = false,
-                request = request,
-                result = StateResult.None
-            )
+    fun updateLabel(text: String?) {
+        setTitleUseCase.execute(text)
+    }
+
+    fun updateUrl(url: String?) {
+        setUrlUseCase.execute(url)
+    }
+
+    private fun populate() {
+        val edits = BookmarkEditData(
+            title = getTitleUseCase.execute(),
+            url = getUrlUseCase.execute(),
+            group = getSelectedGroupUseCase.execute(),
+            expiration = getExpirationDateUseCase.execute()
+        )
+        state.value = getLastState()?.copy(
+            loading = Loading(),
+            error = Error(),
+            data = edits
         )
     }
 
@@ -88,13 +90,9 @@ class BookmarkCreateViewModel private constructor(
         title: String?,
         message: String?
     ) {
-        state.value = Event(
-            BookmarkCreateViewState(
-                loading = false,
-                request = StateRequest.None,
-                result = StateResult.None,
-                error = Error(exception, title, message)
-            )
+        state.value = getLastState()?.copy(
+            loading = Loading(),
+            error = Error(exception, title, message)
         )
     }
 
@@ -103,16 +101,12 @@ class BookmarkCreateViewModel private constructor(
         titleResId: Int?,
         messageResId: Int?
     ) {
-        state.value = Event(
-            BookmarkCreateViewState(
-                loading = false,
-                request = StateRequest.None,
-                result = StateResult.None,
-                error = Error(
-                    exception = exception,
-                    titleResId = titleResId,
-                    messageResId = messageResId
-                )
+        state.value = getLastState()?.copy(
+            loading = Loading(),
+            error = Error(
+                exception = exception,
+                titleResId = titleResId,
+                messageResId = messageResId
             )
         )
     }
@@ -123,6 +117,12 @@ class BookmarkCreateViewModel private constructor(
             getGroupsUseCase: GetGroupsLiveDataUsecase,
             getSelectedGroupUseCase: GetSelectedGroupUsecase,
             setSelectedGroupUseCase: SelectGroupUsecase,
+            getTitleUseCase: GetTitleUsecase,
+            setTitleUseCase: SetTitleUsecase,
+            getUrlUseCase: GetUrlUsecase,
+            setUrlUseCase: SetUrlUsecase,
+            getExpirationDateUseCase: GetExpirationDateUsecase,
+            setExpirationDateUseCase: SetExpirationDateUsecase,
             createBookmarkUseCase: CreateBookmarkUsecase
         ): BookmarkCreateViewModel {
             return BookmarkCreateViewModel(
@@ -130,25 +130,58 @@ class BookmarkCreateViewModel private constructor(
                 getGroupsUseCase,
                 getSelectedGroupUseCase,
                 setSelectedGroupUseCase,
+                getTitleUseCase,
+                setTitleUseCase,
+                getUrlUseCase,
+                setUrlUseCase,
+                getExpirationDateUseCase,
+                setExpirationDateUseCase,
                 createBookmarkUseCase
             )
         }
     }
 }
 
-data class BookmarkCreateViewState(
-    override val loading: Boolean = false,
-    override val request: StateRequest = StateRequest.None,
-    override val result: StateResult = StateResult.None,
-    override val error: Error = Error()
-) : ViewState() {
-    sealed class StateRequest : ViewStateRequest() {
-        data class InitialLoad(val bookmarkId: String? = null) : StateRequest()
-        object None : StateRequest()
+data class BookmarkEditData(
+    val title: String? = null,
+    val url: String? = null,
+    val group: Group? = null,
+    val expiration: Date? = null
+)
+
+fun Bookmark?.toEditData(): BookmarkEditData {
+    if (this == null) {
+        return BookmarkEditData()
     }
 
-    sealed class StateResult : ViewStateResult() {
-        data class Created(val result: Success) : StateResult()
-        object None : StateResult()
-    }
+    return BookmarkEditData(
+        title = title,
+        url = site?.url,
+        group = group,
+        expiration = expiration
+    )
+}
+
+fun BookmarkEditData.createBookmark(): Bookmark {
+    return Bookmark(
+        title = title,
+        site = url?.let { Website(it) },
+        expiration = expiration,
+        group = group
+    )
+}
+
+data class BookmarkCreateViewState(
+    override val loading: Loading = Loading(),
+    override val error: Error = Error(),
+    val data: BookmarkEditData = BookmarkEditData()
+) : ViewState()
+
+sealed class BookmarkCreateEvent : ViewStateRequest() {
+    object DateSet : BookmarkCreateEvent()
+}
+
+sealed class BookmarkCreateAction : ViewStateAction() {
+    data class Created(val bookmark: Bookmark?) : BookmarkCreateAction()
+
 }

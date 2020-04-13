@@ -1,9 +1,13 @@
 package dev.bmcreations.expiry.core.architecture
 
+import android.util.Log
 import androidx.annotation.StringRes
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.zhuinden.eventemitter.EventEmitter
+import com.zhuinden.eventemitter.EventSource
 
-abstract class BaseViewModel<T> : ViewModel() {
+abstract class BaseViewModel<T: ViewState, R: ViewStateRequest, A: ViewStateAction> : ViewModel(), ViewModelContract<A> {
 
     abstract fun informOfError(
         exception: Throwable? = null,
@@ -16,21 +20,26 @@ abstract class BaseViewModel<T> : ViewModel() {
         @StringRes titleResId: Int? = null,
         @StringRes messageResId: Int?
     )
+
+    val state: MutableLiveData<T> = MutableLiveData()
+
+    fun getLastState(): T? = state.value
+
+    protected val requestEmitter = EventEmitter<R>()
+    val requests: EventSource<R> get() = requestEmitter
+
+    protected val actionEmitter = EventEmitter<A>()
+    val actions: EventSource<A> get() = actionEmitter
+
+    override fun process(viewEvent: A) {
+        Log.d(javaClass.simpleName, "processing event: $viewEvent")
+    }
 }
 
-interface ViewStateResultImpl<in T> where T: ViewStateResult {
-    fun informOfResult(result: T)
+/**
+ * Internal Contract to be implemented by ViewModel
+ * Required to intercept and log ViewEvents
+ */
+internal interface ViewModelContract<EVENT> {
+    fun process(viewEvent: EVENT)
 }
-
-interface ViewStateRequestImpl<in T> where T: ViewStateRequest {
-    fun informOfRequest(request: T)
-}
-
-open class ViewState(
-    open val loading: Boolean = false,
-    open val request: ViewStateRequest = ViewStateRequest(),
-    open val result: ViewStateResult = ViewStateResult(),
-    open val error: Error = Error()
-)
-open class ViewStateRequest
-open class ViewStateResult

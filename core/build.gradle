@@ -12,4 +12,9 @@ dependencies {
     implementation deps.jetpack.lifecycle_extensions
 
     implementation deps.jetpack.navigation_runtime
+
+    api deps.anko.anko
+    api deps.anko.commons
+
+    api deps.event_emitter
 }

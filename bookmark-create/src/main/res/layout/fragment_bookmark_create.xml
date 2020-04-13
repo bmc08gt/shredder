@@ -5,13 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:cardBackgroundColor="@color/color_surface"
-    app:cardElevation="8dp"
+    android:elevation="8dp"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
     app:shapeAppearanceOverlay="@style/ModalBottomSheet.ShapeAppearanceOverlay">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/color_surface">
+        android:layout_height="match_parent">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/label"
@@ -87,6 +88,32 @@
                 app:singleSelection="true" />
         </HorizontalScrollView>
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/expiration_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:text="Allow this bookmark to expire?"
+            android:textColor="@color/color_on_surface"
+            android:textSize="18sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scroller" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/expiration_chip_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clipToPadding="false"
+            android:paddingStart="16dp"
+            android:paddingTop="6dp"
+            android:paddingEnd="16dp"
+            android:paddingBottom="6dp"
+            app:singleLine="true"
+            app:singleSelection="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/expiration_header"/>
 
         <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
             android:id="@+id/save"

@@ -45,8 +45,8 @@
     <style name="AppModalBottomSheet" parent="ThemeOverlay.MaterialComponents.DayNight.BottomSheetDialog">
         <item name="shapeAppearanceOverlay">@style/ModalBottomSheet.ShapeAppearanceOverlay</item>
         <item name="android:navigationBarColor">@color/color_surface</item>
-        <item name="android:statusBarColor">@android:color/transparent</item>
-        <item name="android:navigationBarDividerColor" tools:ignore="NewApi">@android:color/transparent</item>
+
+        <item name="android:navigationBarDividerColor" tools:ignore="NewApi">@color/color_surface</item>
     </style>
 
     <style name="ModalBottomSheet" parent="Widget.MaterialComponents.BottomSheet.Modal">
