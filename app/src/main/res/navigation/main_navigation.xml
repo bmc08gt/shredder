@@ -5,7 +5,7 @@
         app:startDestination="@id/home">
 
     <fragment android:id="@+id/home"
-            android:name="dev.bmcreations.expiry.features.list.view.BookmarksListFragment"
+            android:name="dev.bmcreations.shredder.features.list.view.BookmarksListFragment"
             android:label="@string/title_bookmark_list">
     </fragment>
 

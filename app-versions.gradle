@@ -1,6 +1,6 @@
 def appInfo = [:]
 
-appInfo.applicationId = "dev.bmcreations.expiry"
+appInfo.applicationId = "dev.bmcreations.shredder"
 appInfo.versionCode = 1
 appInfo.versionName = "1.0"
 ext.appInfo = appInfo

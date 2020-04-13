@@ -7,4 +7,4 @@ include ':models'
 include ':base-ui'
 include ':bookmark-list'
 
-rootProject.name='expiry'
+rootProject.name='shredder'

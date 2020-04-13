@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/create"
-        android:name="dev.bmcreations.expiry.features.create.view.BookmarkCreateFragment"
+        android:name="dev.bmcreations.shredder.features.create.view.BookmarkCreateFragment"
         android:label="Create a bookmark">
 
         <argument android:name="id" app:argType="string" app:nullable="true" />
@@ -32,7 +32,7 @@
 
     <fragment
         android:id="@+id/expiration_selection"
-        android:name="dev.bmcreations.expiry.features.create.view.calendar.BookmarkExpirationSelectionFragment"
+        android:name="dev.bmcreations.shredder.features.create.view.calendar.BookmarkExpirationSelectionFragment"
         android:label="Select an expiration date" />
 
     <dialog

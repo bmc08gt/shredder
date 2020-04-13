@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="expiry.app" target="1.7" />
+      <module name="expiry.base-ui" target="1.7" />
+      <module name="expiry.bookmark-bar" target="1.7" />
+      <module name="expiry.bookmark-create" target="1.7" />
+      <module name="expiry.bookmark-list" target="1.7" />
+      <module name="expiry.core" target="1.7" />
+      <module name="expiry.models" target="1.7" />
+      <module name="expiry.network" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

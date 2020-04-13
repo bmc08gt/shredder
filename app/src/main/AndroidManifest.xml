@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="dev.bmcreations.expiry">
+    package="dev.bmcreations.shredder">
 
 
     <application
-        android:name=".Expiry"
+        android:name="dev.bmcreations.shredder.Shredder"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,7 +15,7 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
-            android:name="dev.bmcreations.expiry.MainActivity"
+            android:name="dev.bmcreations.shredder.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
