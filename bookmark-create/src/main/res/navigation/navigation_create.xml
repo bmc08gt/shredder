@@ -37,18 +37,18 @@
 
     <dialog
         android:id="@+id/create_group"
-        android:name="dev.bmcreations.expiry.features.create.dialogs.CreateGroupDialog" />
+        android:name="dev.bmcreations.shredder.features.create.dialogs.CreateGroupDialog" />
 
     <dialog
         android:id="@+id/remove_group"
-        android:name="dev.bmcreations.expiry.features.create.dialogs.RemoveGroupDialog">
+        android:name="dev.bmcreations.shredder.features.create.dialogs.RemoveGroupDialog">
         <argument
             android:name="group"
-            app:argType="dev.bmcreations.expiry.models.Group" />
+            app:argType="dev.bmcreations.shredder.models.Group" />
     </dialog>
 
     <dialog
         android:id="@id/remove_expiration"
-        android:name="dev.bmcreations.expiry.features.create.dialogs.RemoveExpirationDialog" />
+        android:name="dev.bmcreations.shredder.features.create.dialogs.RemoveExpirationDialog" />
 
 </navigation>

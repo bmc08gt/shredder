@@ -24,19 +24,21 @@ class BookmarkCreateViewModel private constructor(
     private val getExpirationDateUseCase: GetExpirationDateUsecase,
     private val setExpirationDateUseCase: SetExpirationDateUsecase,
     private val createBookmarkUseCase: CreateBookmarkUsecase
-) : BaseViewModel<BookmarkCreateViewState, BookmarkCreateEvent, BookmarkCreateEffect>(),
-    CoroutineScope by CoroutineScope(Dispatchers.Main) {
-
-    init {
-        state.value = BookmarkCreateViewState(Loading(loading = true))
-    }
+) : BaseViewModel<BookmarkCreateViewState, BookmarkCreateEvent, BookmarkCreateEffect>(
+    BookmarkCreateViewState(Loading(loading = true))
+), CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
     fun createBookmark() {
         createBookmarkUseCase.execute {
             if (it != null) {
                 eventEmitter.emit(BookmarkCreateEvent.Created(it))
             } else {
-                informOfError(title = "Error", message = "Failed to create bookmark.")
+                setState {
+                    copy(
+                        loading = Loading(),
+                        error = generateError(title = "Error", message = "Failed to create bookmark.")
+                    )
+                }
             }
         }
     }
@@ -82,32 +84,6 @@ class BookmarkCreateViewModel private constructor(
             loading = Loading(),
             error = Error(),
             data = edits
-        )
-    }
-
-    override fun informOfError(
-        exception: Throwable?,
-        title: String?,
-        message: String?
-    ) {
-        state.value = getLastState()?.copy(
-            loading = Loading(),
-            error = Error(exception, title, message)
-        )
-    }
-
-    override fun informOfError(
-        exception: Throwable?,
-        titleResId: Int?,
-        messageResId: Int?
-    ) {
-        state.value = getLastState()?.copy(
-            loading = Loading(),
-            error = Error(
-                exception = exception,
-                titleResId = titleResId,
-                messageResId = messageResId
-            )
         )
     }
 
@@ -175,7 +151,7 @@ data class BookmarkCreateViewState(
     override val loading: Loading = Loading(),
     override val error: Error = Error(),
     val data: BookmarkEditData = BookmarkEditData()
-) : ViewState()
+) : ViewState
 
 sealed class BookmarkCreateEvent : ViewStateEvent() {
     data class Created(val bookmark: Bookmark?) : BookmarkCreateEvent()

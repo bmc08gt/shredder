@@ -1,45 +1,40 @@
 package dev.bmcreations.shredder.core.architecture
 
 import android.util.Log
-import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.zhuinden.eventemitter.EventEmitter
 import com.zhuinden.eventemitter.EventSource
 
-abstract class BaseViewModel<T: ViewState, R: ViewStateEvent, A: ViewStateEffect> : ViewModel(), ViewModelContract<A> {
+abstract class BaseViewModel<S: ViewState, E: ViewStateEvent, A: ViewStateEffect>(private val initialState: S) : ViewModel() {
 
-    abstract fun informOfError(
-        exception: Throwable? = null,
-        title: String? = null,
-        message: String?
-    )
+    val state: MutableLiveData<S> = MutableLiveData()
 
-    abstract fun informOfError(
-        exception: Throwable? = null,
-        @StringRes titleResId: Int? = null,
-        @StringRes messageResId: Int?
-    )
+    protected fun getLastState(): S? = state.value ?: initialState
 
-    val state: MutableLiveData<T> = MutableLiveData()
-
-    fun getLastState(): T? = state.value
-
-    protected val eventEmitter = EventEmitter<R>()
-    val events: EventSource<R> get() = eventEmitter
+    protected val eventEmitter = EventEmitter<E>()
+    val events: EventSource<E> get() = eventEmitter
 
     protected val effectsEmitter = EventEmitter<A>()
     val effects: EventSource<A> get() = effectsEmitter
 
-    override fun process(viewEvent: A) {
-        Log.d(javaClass.simpleName, "processing event: $viewEvent")
+    init {
+        setState { initialState }
     }
-}
 
-/**
- * Internal Contract to be implemented by ViewModel
- * Required to intercept and log ViewEvents
- */
-internal interface ViewModelContract<EVENT> {
-    fun process(viewEvent: EVENT)
+    fun setState(stateModifier: S.() -> S) {
+        stateModifier.invoke(state.value ?: initialState)
+    }
+
+    protected fun generateError(
+        exception: Throwable? = null,
+        title: String?,
+        message: String?
+    ): Error = Error(exception = exception, titleString = title, messageString = message)
+
+    protected fun generateError(
+        exception: Throwable?,
+        titleResId: Int?,
+        messageResId: Int?
+    ): Error = Error(exception = exception, titleResId = titleResId, messageResId = messageResId)
 }

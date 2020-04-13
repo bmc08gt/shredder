@@ -10,8 +10,8 @@
     </fragment>
 
     <dialog android:id="@+id/create_bookmark"
-        android:name="dev.bmcreations.expiry.features.create.BookmarkCreator"
+        android:name="dev.bmcreations.shredder.features.create.BookmarkCreator"
         android:label="Create a bookmark">
-        <deepLink app:uri="expiry://create"/>
+        <deepLink app:uri="shredder://create"/>
     </dialog>
 </navigation>
