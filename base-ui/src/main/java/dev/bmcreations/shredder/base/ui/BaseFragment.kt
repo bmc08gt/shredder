@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 
+// TODO: Kill in favor of [StateDrivenFragment]
 abstract class BaseFragment : Fragment() {
 
     abstract val layoutResId: Int

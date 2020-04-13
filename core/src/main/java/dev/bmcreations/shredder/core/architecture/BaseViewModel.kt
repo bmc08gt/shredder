@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.zhuinden.eventemitter.EventEmitter
 import com.zhuinden.eventemitter.EventSource
 
-abstract class BaseViewModel<T: ViewState, R: ViewStateRequest, A: ViewStateAction> : ViewModel(), ViewModelContract<A> {
+abstract class BaseViewModel<T: ViewState, R: ViewStateEvent, A: ViewStateEffect> : ViewModel(), ViewModelContract<A> {
 
     abstract fun informOfError(
         exception: Throwable? = null,
@@ -25,11 +25,11 @@ abstract class BaseViewModel<T: ViewState, R: ViewStateRequest, A: ViewStateActi
 
     fun getLastState(): T? = state.value
 
-    protected val requestEmitter = EventEmitter<R>()
-    val requests: EventSource<R> get() = requestEmitter
+    protected val eventEmitter = EventEmitter<R>()
+    val events: EventSource<R> get() = eventEmitter
 
-    protected val actionEmitter = EventEmitter<A>()
-    val actions: EventSource<A> get() = actionEmitter
+    protected val effectsEmitter = EventEmitter<A>()
+    val effects: EventSource<A> get() = effectsEmitter
 
     override fun process(viewEvent: A) {
         Log.d(javaClass.simpleName, "processing event: $viewEvent")

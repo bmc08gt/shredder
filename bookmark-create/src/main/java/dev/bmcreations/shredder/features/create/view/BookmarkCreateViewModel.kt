@@ -24,7 +24,7 @@ class BookmarkCreateViewModel private constructor(
     private val getExpirationDateUseCase: GetExpirationDateUsecase,
     private val setExpirationDateUseCase: SetExpirationDateUsecase,
     private val createBookmarkUseCase: CreateBookmarkUsecase
-) : BaseViewModel<BookmarkCreateViewState, BookmarkCreateEvent, BookmarkCreateAction>(),
+) : BaseViewModel<BookmarkCreateViewState, BookmarkCreateEvent, BookmarkCreateEffect>(),
     CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
     init {
@@ -34,7 +34,7 @@ class BookmarkCreateViewModel private constructor(
     fun createBookmark() {
         createBookmarkUseCase.execute {
             if (it != null) {
-                actionEmitter.emit(BookmarkCreateAction.Created(it))
+                eventEmitter.emit(BookmarkCreateEvent.Created(it))
             } else {
                 informOfError(title = "Error", message = "Failed to create bookmark.")
             }
@@ -177,11 +177,8 @@ data class BookmarkCreateViewState(
     val data: BookmarkEditData = BookmarkEditData()
 ) : ViewState()
 
-sealed class BookmarkCreateEvent : ViewStateRequest() {
-    object DateSet : BookmarkCreateEvent()
+sealed class BookmarkCreateEvent : ViewStateEvent() {
+    data class Created(val bookmark: Bookmark?) : BookmarkCreateEvent()
 }
 
-sealed class BookmarkCreateAction : ViewStateAction() {
-    data class Created(val bookmark: Bookmark?) : BookmarkCreateAction()
-
-}
+sealed class BookmarkCreateEffect : ViewStateEffect()
