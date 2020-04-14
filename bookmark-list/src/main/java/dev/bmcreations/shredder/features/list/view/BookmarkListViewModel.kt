@@ -3,8 +3,8 @@ package dev.bmcreations.shredder.features.list.view
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import dev.bmcreations.shredder.core.extensions.exhaustive
-import dev.bmcreations.shredder.network.repository.NetworkResult
-import dev.bmcreations.shredder.network.repository.WebManifestRepository
+import dev.bmcreations.shredder.network.NetworkResult
+import dev.bmcreations.shredder.network.manifest.repository.WebManifestRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

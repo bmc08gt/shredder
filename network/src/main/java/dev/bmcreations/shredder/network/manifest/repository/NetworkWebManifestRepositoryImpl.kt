@@ -1,9 +1,10 @@
-package dev.bmcreations.shredder.network.repository
+package dev.bmcreations.shredder.network.manifest.repository
 
 import dev.bmcreations.shredder.models.WebManifest
 import dev.bmcreations.shredder.models.withManifest
 import dev.bmcreations.shredder.models.withManifestJson
-import dev.bmcreations.shredder.network.WebManifestService
+import dev.bmcreations.shredder.network.NetworkResult
+import dev.bmcreations.shredder.network.manifest.service.WebManifestService
 import java.lang.Exception
 
 class NetworkWebManifestRepositoryImpl(

@@ -1,3 +1,5 @@
+include ':app-flavor-production'
+include ':app-flavor-staging'
 include ':bookmark-create'
 include ':network'
 include ':app'

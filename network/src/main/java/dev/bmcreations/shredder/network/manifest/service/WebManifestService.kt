@@ -1,4 +1,4 @@
-package dev.bmcreations.shredder.network
+package dev.bmcreations.shredder.network.manifest.service
 
 import dev.bmcreations.shredder.models.WebManifest
 import kotlinx.coroutines.Deferred

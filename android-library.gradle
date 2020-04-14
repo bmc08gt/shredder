@@ -29,6 +29,18 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled false
+        }
     }
 
+    flavorDimensions "environment"
+    productFlavors {
+        staging {
+            dimension "environment"
+        }
+        production {
+            dimension "environment"
+        }
+    }
 }

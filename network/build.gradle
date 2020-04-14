@@ -9,7 +9,6 @@ dependencies {
     implementation deps.kotlin.coroutinesAndroid
 
     implementation deps.retrofit.runtime
-    implementation deps.retrofit.gson
     implementation deps.retrofit.coroutines
     implementation deps.okhttp3
     implementation deps.okhttp3_logging

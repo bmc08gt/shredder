@@ -1,4 +1,4 @@
-package dev.bmcreations.shredder.network.repository
+package dev.bmcreations.shredder.network
 
 sealed class NetworkResult<out T> {
     data class Success<T>(val body: T) : NetworkResult<T>()

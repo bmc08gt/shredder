@@ -4,15 +4,26 @@ data class NetworkConfig(
     val baseUrl: String = "http://localhost",
     val recordProxyEndpoint: String? = null,
     val loadAndPlaybackFileBasedMappings: Boolean = false,
-    val port: Int = 8080,
-    val isWireMockServer: Boolean = true
+    val port: Int? = null,
+    val isWireMockServer: Boolean = true,
+    val versioned: Int? = null
 ) {
     val fullUrl by lazy {
-        var fullUrl = "$baseUrl:$port"
-        if (!baseUrl.endsWith("/")) {
-            fullUrl += "/"
+        (port?.let { "$baseUrl:$port" } ?: baseUrl).run {
+            if (!baseUrl.endsWith("/")) {
+                if (versioned != null) {
+                    plus("/").plus("v${versioned}/")
+                } else {
+                    plus("/")
+                }
+            } else {
+                if (versioned != null) {
+                    plus("v$versioned/")
+                } else {
+                    this
+                }
+            }
         }
-        fullUrl
     }
 
     val isLocalhostServer by lazy {

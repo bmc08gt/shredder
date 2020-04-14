@@ -1,6 +1,9 @@
 apply from: "$rootProject.projectDir/android-library.gradle"
 
 dependencies {
+    stagingImplementation project(':app-flavor-staging')
+    productionImplementation project(':app-flavor-production')
+
     implementation project(':base-ui')
     implementation project(':bookmark-bar')
     implementation project(':core')

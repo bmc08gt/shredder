@@ -21,10 +21,26 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled false
+        }
+    }
+
+    flavorDimensions "environment"
+    productFlavors {
+        staging {
+            dimension "environment"
+        }
+        production {
+            dimension "environment"
+        }
     }
 }
 
 dependencies {
+    stagingImplementation project(':app-flavor-staging')
+    productionImplementation project(':app-flavor-production')
+
     // Core Components
     implementation project(':core')
 

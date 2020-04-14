@@ -1,0 +1,7 @@
+apply from: "$rootProject.projectDir/android-library.gradle"
+
+dependencies {
+    implementation project(':core') // DI
+    implementation project(':models') // models
+    implementation project(':network') // networking
+}
