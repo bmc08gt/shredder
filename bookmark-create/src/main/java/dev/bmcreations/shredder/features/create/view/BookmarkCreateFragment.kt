@@ -107,6 +107,5 @@ class BookmarkCreateFragment: StateDrivenFragment<BookmarkCreateViewState, Bookm
     }
 
     override fun handleEvent(event: BookmarkCreateEvent) = Unit
-
-    override fun handleAction(action: BookmarkCreateEffect) = Unit
+    override fun renderViewEffect(action: BookmarkCreateEffect) = Unit
 }

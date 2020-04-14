@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.zhuinden.eventemitter.EventEmitter
 import com.zhuinden.eventemitter.EventSource
 
-abstract class BaseViewModel<S: ViewState, E: ViewStateEvent, A: ViewStateEffect>(private val initialState: S) : ViewModel() {
+abstract class BaseViewModel<S: ViewState, E: ViewStateEvent, X: ViewStateEffect>(private val initialState: S) : ViewModel() {
 
     val state: MutableLiveData<S> = MutableLiveData()
 
@@ -15,8 +15,8 @@ abstract class BaseViewModel<S: ViewState, E: ViewStateEvent, A: ViewStateEffect
     protected val eventEmitter = EventEmitter<E>()
     val events: EventSource<E> get() = eventEmitter
 
-    protected val effectsEmitter = EventEmitter<A>()
-    val effects: EventSource<A> get() = effectsEmitter
+    protected val effectsEmitter = EventEmitter<X>()
+    val effects: EventSource<X> get() = effectsEmitter
 
     init {
         setState { initialState }

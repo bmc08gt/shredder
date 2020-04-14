@@ -8,7 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 
-abstract class StateDrivenActivity<T: ViewState, E: ViewStateEvent, A: ViewStateEffect, V : BaseViewModel<T, E, A>> : AppCompatActivity() {
+abstract class StateDrivenActivity<T: ViewState, E: ViewStateEvent, X: ViewStateEffect, V : BaseViewModel<T, E, X>> : AppCompatActivity() {
 
     abstract val viewModel: V
 
@@ -32,8 +32,8 @@ abstract class StateDrivenActivity<T: ViewState, E: ViewStateEvent, A: ViewState
     protected  fun whenResumed() = Unit
 
     abstract fun renderViewState(viewState: T)
+    abstract fun renderViewEffect(action: X)
     abstract fun handleEvent(event: E)
-    abstract fun handleAction(action: A)
 
     protected fun handleError(error: Error) {
         window.decorView.rootView.doOnLayout {
@@ -51,8 +51,8 @@ abstract class StateDrivenActivity<T: ViewState, E: ViewStateEvent, A: ViewState
         handleEvent(it)
     }
 
-    private val viewEffectsObserver = Observer<A> {
+    private val viewEffectsObserver = Observer<X> {
         Log.d(javaClass.simpleName,"observed view action : $it")
-        handleAction(it)
+        renderViewEffect(it)
     }
 }

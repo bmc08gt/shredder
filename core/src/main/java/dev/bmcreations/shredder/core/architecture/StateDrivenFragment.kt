@@ -11,7 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
 
-abstract class StateDrivenFragment<T: ViewState, E: ViewStateEvent, A: ViewStateEffect, V : BaseViewModel<T, E, A>> : Fragment() {
+abstract class StateDrivenFragment<T: ViewState, E: ViewStateEvent, X: ViewStateEffect, V : BaseViewModel<T, E, X>> : Fragment() {
 
     abstract val viewModel: V
 
@@ -25,9 +25,9 @@ abstract class StateDrivenFragment<T: ViewState, E: ViewStateEvent, A: ViewState
         handleEvent(it)
     }
 
-    private val viewEffectsObserver = Observer<A> {
+    private val viewEffectsObserver = Observer<X> {
         Log.d(javaClass.simpleName,"observed view action : $it")
-        handleAction(it)
+        renderViewEffect(it)
     }
 
     abstract val layoutResId: Int
@@ -59,7 +59,7 @@ abstract class StateDrivenFragment<T: ViewState, E: ViewStateEvent, A: ViewState
 
     abstract fun renderViewState(viewState: T)
     abstract fun handleEvent(event: E)
-    abstract fun handleAction(action: A)
+    abstract fun renderViewEffect(action: X)
 
     protected fun handleError(error: Error) {
         activity?.window?.decorView?.rootView?.doOnLayout { decorView ->
