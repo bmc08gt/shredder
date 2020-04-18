@@ -39,6 +39,44 @@
         <item name="bottomSheetDialogTheme">@style/AppModalBottomSheet</item>
     </style>
 
+    <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Global color attributes -->
+        <item name="colorPrimary">@color/color_secondary</item>
+        <item name="colorPrimaryVariant">@color/color_primary_variant</item>
+        <item name="colorOnPrimary">@color/color_on_primary</item>
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorSecondaryVariant">@color/color_secondary_variant</item>
+        <item name="colorOnSecondary">@color/color_on_secondary</item>
+        <item name="colorError">@color/color_error</item>
+        <item name="colorOnError">@color/color_on_error</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="colorOnSurface">@color/color_on_surface</item>
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorOnBackground">@color/color_on_background</item>
+        <item name="android:statusBarColor">@color/color_status_bar</item>
+        <!-- Global type attributes -->
+        <item name="textAppearanceButton">@style/AppTextAppearance.Button</item>
+        <item name="fontFamily">@font/roboto_mono</item>
+        <item name="android:fontFamily">@font/roboto_mono</item>
+        <!-- Global shape attributes -->
+        <item name="shapeAppearanceSmallComponent">@style/AppShapeAppearance.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/AppShapeAppearance.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/AppShapeAppearance.LargeComponent</item>
+        <!-- Chip widget style attribute -->
+        <item name="chipStyle">@style/AppChip</item>
+        <item name="chipStandaloneStyle">@style/AppChip.Standalone</item>
+        <!-- Button widget style attribute -->
+        <item name="materialButtonStyle">@style/AppButton</item>
+        <!-- Text Field widget style attribute -->
+        <item name="textInputStyle">@style/AppTextField.Outlined</item>
+        <!-- Card widget style attribute -->
+        <item name="materialCardViewStyle">@style/AppCard</item>
+        <!-- Bottom Navigation widget style attribute -->
+        <item name="bottomNavigationStyle">@style/AppBottomNavigation</item>
+        <!--        <item name="bottomSheetStyle">@style/AppModalBottomSheet</item>-->
+        <item name="bottomSheetDialogTheme">@style/AppModalBottomSheet</item>
+    </style>
+
     <style name="AppTextAppearance.Chip" parent="TextAppearance.MaterialComponents.Chip">
         <item name="fontFamily">@font/roboto_mono</item>
         <item name="android:fontFamily">@font/roboto_mono</item>
