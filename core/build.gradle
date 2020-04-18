@@ -1,6 +1,8 @@
 apply from: "$rootProject.projectDir/android-library.gradle"
 
 dependencies {
+    implementation project(':models')
+
     implementation deps.kotlin.stdlib
     implementation deps.kotlin.coroutinesCore
     implementation deps.kotlin.coroutinesAndroid
@@ -11,6 +13,8 @@ dependencies {
     implementation deps.jetpack.fragment_ktx
     implementation deps.jetpack.lifecycle_extensions
     implementation deps.jetpack.material
+
+    implementation deps.gson
 
     implementation deps.jetpack.navigation_runtime
 
