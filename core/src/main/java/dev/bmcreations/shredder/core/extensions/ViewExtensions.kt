@@ -8,11 +8,16 @@ import android.os.Build
 import android.view.DisplayCutout
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.TranslateAnimation
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.doOnPreDraw
+import androidx.core.view.isInvisible
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 /** Combination of all flags required to put activity into immersive mode */
 const val FLAGS_FULLSCREEN =
@@ -134,4 +139,15 @@ fun AppCompatImageView.tint(colorResId: Int) {
 
 fun AppCompatImageView.removeTint() {
     this.clearColorFilter()
+}
+
+fun FloatingActionButton.animateVisible(delay: Long) {
+    apply {
+        isInvisible = true
+        scaleX = 0f
+        scaleY = 0f
+        doOnPreDraw {
+            postDelayed({ show() }, delay)
+        }
+    }
 }
