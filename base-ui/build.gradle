@@ -11,4 +11,6 @@ dependencies {
     implementation deps.jetpack.fragment
     implementation deps.jetpack.fragment_ktx
     implementation deps.jetpack.material
+
+    api deps.lottie
 }
