@@ -1,0 +1,35 @@
+query {
+    me {
+        id
+        firstName
+        lastName
+        fullName
+        email
+        bookmarks {
+            id
+            label
+            icon
+            url
+            createdAt
+            updatedAt
+            expiresAt
+            groupId
+        }
+        groups {
+            id
+            label
+            createdAt
+            updatedAt
+            bookmarks {
+                id
+                label
+                icon
+                url
+                createdAt
+                updatedAt
+                expiresAt
+                groupId
+            }
+        }
+    }
+}
