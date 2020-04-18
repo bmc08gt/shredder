@@ -14,4 +14,10 @@
         android:label="Create a bookmark">
         <deepLink app:uri="shredder://create"/>
     </dialog>
+
+    <activity android:id="@+id/login_or_create_account"
+        android:label="Login"
+        android:name="dev.bmcreations.shredder.login.view.LoginActivity">
+        <deepLink app:uri="shredder://login" />
+    </activity>
 </navigation>
