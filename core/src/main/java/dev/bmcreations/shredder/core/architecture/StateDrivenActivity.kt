@@ -14,12 +14,9 @@ abstract class StateDrivenActivity<T: ViewState, E: ViewStateEvent, X: ViewState
 
     abstract val layoutResId: Int
 
-    abstract fun initView()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layoutResId)
-        initView()
 
         lifecycleScope.launchWhenStarted { whenStarted() }
         lifecycleScope.launchWhenResumed { whenResumed() }
@@ -28,8 +25,8 @@ abstract class StateDrivenActivity<T: ViewState, E: ViewStateEvent, X: ViewState
         viewModel.effects.observe(this, viewEffectsObserver)
     }
 
-    protected fun whenStarted() = Unit
-    protected  fun whenResumed() = Unit
+    protected open suspend fun whenStarted() = Unit
+    protected open suspend fun whenResumed() = Unit
 
     abstract fun renderViewState(viewState: T)
     abstract fun renderViewEffect(action: X)
