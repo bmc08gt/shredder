@@ -61,7 +61,7 @@ abstract class StateDrivenFragment<T: ViewState, E: ViewStateEvent, X: ViewState
     abstract fun handleEvent(event: E)
     abstract fun renderViewEffect(action: X)
 
-    protected fun handleError(error: Error) {
+    protected fun handleError(error: ViewStateError) {
         activity?.window?.decorView?.rootView?.doOnLayout { decorView ->
             context?.let {
                 Snackbar.make(decorView, error.message(it), Snackbar.LENGTH_SHORT).show()

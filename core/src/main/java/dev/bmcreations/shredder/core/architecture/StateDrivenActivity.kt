@@ -32,7 +32,7 @@ abstract class StateDrivenActivity<T: ViewState, E: ViewStateEvent, X: ViewState
     abstract fun renderViewEffect(action: X)
     abstract fun handleEvent(event: E)
 
-    protected fun handleError(error: Error) {
+    protected fun handleError(error: ViewStateError) {
         window.decorView.rootView.doOnLayout {
             Snackbar.make(it, error.message(this), Snackbar.LENGTH_SHORT).show()
         }

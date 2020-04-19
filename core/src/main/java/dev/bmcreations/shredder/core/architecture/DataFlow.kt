@@ -3,7 +3,7 @@ package dev.bmcreations.shredder.core.architecture
 import android.content.Context
 import androidx.annotation.StringRes
 
-data class Error(
+data class ViewStateError(
     val exception: Throwable? = null,
     val titleString: String? = null,
     val messageString: String? = null,
@@ -28,7 +28,7 @@ data class Error(
     }
 }
 
-data class Loading(
+data class ViewStateLoading(
     val loading: Boolean = false,
     val message: String = "Loading..."
 ) {
