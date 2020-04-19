@@ -1,5 +1,8 @@
 package dev.bmcreations.shredder.core.extensions
 
+import android.R.attr.animationDuration
+import android.animation.Animator
+import android.animation.AnimatorListenerAdapter
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
@@ -8,7 +11,6 @@ import android.os.Build
 import android.view.DisplayCutout
 import android.view.View
 import android.view.WindowManager
-import android.view.animation.TranslateAnimation
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
@@ -150,4 +152,26 @@ fun FloatingActionButton.animateVisible(delay: Long) {
             postDelayed({ show() }, delay)
         }
     }
+}
+
+fun View.animateVisible(duration: Long) {
+    animate()
+        .alpha(1f)
+        .setDuration(duration)
+        .setListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationStart(animation: Animator?) {
+                isVisible = true
+            }
+        })
+}
+
+fun View.animateGone(duration: Long) {
+    animate()
+        .alpha(0f)
+        .setDuration(duration)
+        .setListener(object : AnimatorListenerAdapter() {
+            override fun onAnimationEnd(animation: Animator) {
+                isVisible = false
+            }
+        })
 }
