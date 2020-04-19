@@ -5,12 +5,14 @@ import android.animation.ObjectAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
+import android.graphics.Typeface.BOLD
 import android.text.TextPaint
 import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.OvershootInterpolator
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.contains
 import androidx.core.view.GestureDetectorCompat
 import dev.bmcreations.shredder.core.extensions.dp
@@ -68,7 +70,7 @@ class LoginSwipeContainer @JvmOverloads constructor(
 
     private val optionPaint = TextPaint().apply {
         color = Color.BLACK
-        typeface = Typeface.DEFAULT_BOLD
+        typeface = ResourcesCompat.getFont(context, R.font.roboto_mono)
         textSize = 24.sp.toFloat()
         isAntiAlias = true
     }
