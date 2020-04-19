@@ -1,6 +1,7 @@
 package dev.bmcreations.shredder.features.create.view
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.viewModelScope
 import dev.bmcreations.shredder.core.architecture.*
 import dev.bmcreations.shredder.features.create.usecases.*
 import dev.bmcreations.shredder.features.create.view.calendar.toDate
@@ -9,6 +10,7 @@ import dev.bmcreations.shredder.models.Group
 import dev.bmcreations.shredder.models.Website
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDate
 import java.util.*
 
@@ -25,7 +27,7 @@ class BookmarkCreateViewModel private constructor(
     private val setExpirationDateUseCase: SetExpirationDateUsecase,
     private val createBookmarkUseCase: CreateBookmarkUsecase
 ) : BaseViewModel<BookmarkCreateViewState, BookmarkCreateEvent, BookmarkCreateEffect>(
-    BookmarkCreateViewState(Loading(loading = true))
+    BookmarkCreateViewState(ViewStateLoading(loading = true))
 ), CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
     fun createBookmark() {
@@ -33,12 +35,7 @@ class BookmarkCreateViewModel private constructor(
             if (it != null) {
                 eventEmitter.emit(BookmarkCreateEvent.Created(it))
             } else {
-                setState {
-                    copy(
-                        loading = Loading(),
-                        error = generateError(title = "Error", message = "Failed to create bookmark.")
-                    )
-                }
+                informOfError(title = "Error", message = "Failed to create bookmark.")
             }
         }
     }
@@ -81,10 +78,42 @@ class BookmarkCreateViewModel private constructor(
             expiration = getExpirationDateUseCase.execute()
         )
         state.value = getLastState()?.copy(
-            loading = Loading(),
-            error = Error(),
+            loading = ViewStateLoading(),
+            error = ViewStateError(),
             data = edits
         )
+    }
+
+    override fun informOfLoading(message: String) {
+        viewModelScope.launch(Dispatchers.Main) {
+            setState {
+                copy(
+                    loading = ViewStateLoading(loading = true, message = message)
+                )
+            }
+        }
+    }
+
+    override fun informOfError(exception: Throwable?, title: String?, message: String?) {
+        viewModelScope.launch(Dispatchers.Main) {
+            setState {
+                copy(
+                    loading = ViewStateLoading(),
+                    error = generateError(exception, title, message)
+                )
+            }
+        }
+    }
+
+    override fun informOfError(exception: Throwable?, titleResId: Int?, messageResId: Int?) {
+        viewModelScope.launch(Dispatchers.Main) {
+            setState {
+                copy(
+                    loading = ViewStateLoading(),
+                    error = generateError(exception, titleResId, messageResId)
+                )
+            }
+        }
     }
 
     companion object {
@@ -148,8 +177,8 @@ fun BookmarkEditData.createBookmark(): Bookmark {
 }
 
 data class BookmarkCreateViewState(
-    override val loading: Loading = Loading(),
-    override val error: Error = Error(),
+    override val loading: ViewStateLoading = ViewStateLoading(),
+    override val error: ViewStateError = ViewStateError(),
     val data: BookmarkEditData = BookmarkEditData()
 ) : ViewState
 

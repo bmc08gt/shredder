@@ -4,8 +4,8 @@ import dev.bmcreations.shredder.core.architecture.*
 
 
 data class LoginViewState(
-    override val loading: Loading = Loading(),
-    override val error: Error = Error()
+    override val loading: ViewStateLoading = ViewStateLoading(),
+    override val error: ViewStateError = ViewStateError()
 ) : ViewState
 
 sealed class LoginViewEvent : ViewStateEvent() {

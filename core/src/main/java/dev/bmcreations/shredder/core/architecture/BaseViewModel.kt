@@ -1,6 +1,6 @@
 package dev.bmcreations.shredder.core.architecture
 
-import android.util.Log
+import androidx.annotation.StringRes
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.zhuinden.eventemitter.EventEmitter
@@ -26,15 +26,29 @@ abstract class BaseViewModel<S: ViewState, E: ViewStateEvent, X: ViewStateEffect
         stateModifier.invoke(state.value ?: initialState)
     }
 
+    abstract fun informOfLoading(message: String)
+
+    abstract fun informOfError(
+        exception: Throwable? = null,
+        title: String? = null,
+        message: String?
+    )
+
+    abstract fun informOfError(
+        exception: Throwable? = null,
+        @StringRes titleResId: Int? = null,
+        @StringRes messageResId: Int?
+    )
+
     protected fun generateError(
         exception: Throwable? = null,
         title: String?,
         message: String?
-    ): Error = Error(exception = exception, titleString = title, messageString = message)
+    ): ViewStateError = ViewStateError(exception = exception, titleString = title, messageString = message)
 
     protected fun generateError(
         exception: Throwable?,
         titleResId: Int?,
         messageResId: Int?
-    ): Error = Error(exception = exception, titleResId = titleResId, messageResId = messageResId)
+    ): ViewStateError = ViewStateError(exception = exception, titleResId = titleResId, messageResId = messageResId)
 }

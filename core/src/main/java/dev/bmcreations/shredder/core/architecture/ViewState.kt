@@ -1,8 +1,8 @@
 package dev.bmcreations.shredder.core.architecture
 
 interface ViewState {
-    val loading: Loading
-    val error: Error
+    val loading: ViewStateLoading
+    val error: ViewStateError
 }
 open class ViewStateEvent
 open class ViewStateEffect
