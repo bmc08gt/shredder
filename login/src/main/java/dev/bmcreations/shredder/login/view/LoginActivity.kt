@@ -9,6 +9,7 @@ import androidx.core.view.ViewCompat
 import dev.bmcreations.shredder.core.architecture.StateDrivenActivity
 import dev.bmcreations.shredder.core.di.Components
 import dev.bmcreations.shredder.core.di.component
+import dev.bmcreations.shredder.core.extensions.animateGone
 import dev.bmcreations.shredder.core.extensions.animateVisible
 import dev.bmcreations.shredder.core.extensions.colors
 import dev.bmcreations.shredder.login.R
@@ -36,10 +37,12 @@ class LoginActivity : StateDrivenActivity<LoginViewState, LoginViewEvent, LoginV
 
             override fun onLoginClicked() {
                 animateFabColorChange(false)
+                animateNameFields(false)
             }
 
             override fun onSignUpClicked() {
                 animateFabColorChange(true)
+                animateNameFields(true)
             }
 
             override fun onAnimationStateChanged(progress: Float) {
@@ -71,6 +74,16 @@ class LoginActivity : StateDrivenActivity<LoginViewState, LoginViewEvent, LoginV
         )
         colorAnimator.interpolator = AccelerateDecelerateInterpolator()
         colorAnimator.start()
+    }
+
+    fun animateNameFields(toSignUp: Boolean) {
+        if (toSignUp) {
+            first_name.animateVisible(300)
+            last_name.animateVisible(300)
+        } else {
+            first_name.animateGone(300)
+            last_name.animateGone(300)
+        }
     }
 }
 
