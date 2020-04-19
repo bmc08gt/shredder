@@ -23,7 +23,7 @@ abstract class BaseViewModel<S: ViewState, E: ViewStateEvent, X: ViewStateEffect
     }
 
     fun setState(stateModifier: S.() -> S) {
-        stateModifier.invoke(state.value ?: initialState)
+        state.value = stateModifier.invoke(state.value ?: initialState)
     }
 
     abstract fun informOfLoading(message: String)
