@@ -1,6 +1,7 @@
 package dev.bmcreations.shredder.bar
 
 import androidx.lifecycle.LiveData
+import com.zhuinden.eventemitter.EventSource
 import dev.bmcreations.shredder.bar.bookmarks.BookmarksDao
 import dev.bmcreations.shredder.bar.groups.GroupsDao
 import dev.bmcreations.shredder.models.Bookmark

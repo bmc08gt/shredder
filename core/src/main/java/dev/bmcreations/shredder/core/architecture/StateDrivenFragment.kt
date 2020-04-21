@@ -20,11 +20,6 @@ abstract class StateDrivenFragment<T: ViewState, E: ViewStateEvent, X: ViewState
         renderViewState(it)
     }
 
-    private val viewEventObserver = Observer<E> {
-        Log.d(javaClass.simpleName,"observed view action : $it")
-        handleEvent(it)
-    }
-
     private val viewEffectsObserver = Observer<X> {
         Log.d(javaClass.simpleName,"observed view action : $it")
         renderViewEffect(it)
@@ -50,7 +45,6 @@ abstract class StateDrivenFragment<T: ViewState, E: ViewStateEvent, X: ViewState
         super.onActivityCreated(savedInstanceState)
         initView()
         viewModel.state.observe(viewLifecycleOwner, viewStateObserver)
-        viewModel.events.observe(viewLifecycleOwner, viewEventObserver)
         viewModel.effects.observe(viewLifecycleOwner, viewEffectsObserver)
     }
 
@@ -58,10 +52,10 @@ abstract class StateDrivenFragment<T: ViewState, E: ViewStateEvent, X: ViewState
     open suspend fun whenResumed() = Unit
 
     abstract fun renderViewState(viewState: T)
-    abstract fun handleEvent(event: E)
     abstract fun renderViewEffect(action: X)
+    abstract fun handleLoading(loader: ViewStateLoading)
 
-    protected fun handleError(error: ViewStateError) {
+    protected open fun handleError(error: ViewStateError) {
         activity?.window?.decorView?.rootView?.doOnLayout { decorView ->
             context?.let {
                 Snackbar.make(decorView, error.message(it), Snackbar.LENGTH_SHORT).show()

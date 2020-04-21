@@ -5,5 +5,5 @@ import androidx.navigation.NavController
 
 
 object BookmarkListActions {
-    fun openSheet(controller: NavController) = controller.navigate(Uri.parse("shredder://create"))
+    fun openSheet(controller: NavController) = controller.navigate(Uri.parse("shredder.app://create"))
 }

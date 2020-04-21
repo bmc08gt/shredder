@@ -7,12 +7,14 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import dev.bmcreations.shredder.core.architecture.StateDrivenFragment
+import dev.bmcreations.shredder.core.architecture.ViewStateLoading
 import dev.bmcreations.shredder.core.di.Components.BOOKMARKS_CREATE
 import dev.bmcreations.shredder.core.di.component
 import dev.bmcreations.shredder.features.create.OnBookmarkCreatedListener
 import dev.bmcreations.shredder.features.create.R
 import dev.bmcreations.shredder.features.create.actions.BookmarkCreateActions
 import dev.bmcreations.shredder.features.create.di.BookmarkCreateComponent
+import dev.bmcreations.shredder.features.create.view.BookmarkCreateEvent.*
 import dev.bmcreations.shredder.models.Group
 import kotlinx.android.synthetic.main.fragment_bookmark_create.*
 import kotlinx.coroutines.launch
@@ -38,7 +40,7 @@ class BookmarkCreateFragment: StateDrivenFragment<BookmarkCreateViewState, Bookm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        create.viewModel.loadBookmark(arguments?.getString("id"))
+        create.viewModel.process(LoadBookmark(arguments?.getString("id")))
     }
 
     override suspend fun whenResumed() {
@@ -50,7 +52,7 @@ class BookmarkCreateFragment: StateDrivenFragment<BookmarkCreateViewState, Bookm
     }
 
     override fun initView() {
-        save.setOnClickListener { create.viewModel.createBookmark() }
+        save.setOnClickListener { create.viewModel.process(Create) }
     }
 
     private fun updateGroups(groups: List<Group> = emptyList()) {
@@ -60,7 +62,7 @@ class BookmarkCreateFragment: StateDrivenFragment<BookmarkCreateViewState, Bookm
                 addView(group.toChip(
                     context = context,
                     selected = create.viewModel.selectedGroup(),
-                    onSelected = { create.viewModel.selectGroup(it) },
+                    onSelected = { create.viewModel.process(SelectGroup(it)) },
                     onRemove = { BookmarkCreateActions.removeGroup(findNavController(), it) })
                 )
             }
@@ -97,15 +99,15 @@ class BookmarkCreateFragment: StateDrivenFragment<BookmarkCreateViewState, Bookm
                 }
                 loadExpiration(data.expiration)
                 label.editText?.doAfterTextChanged { text ->
-                    create.viewModel.updateLabel(text?.toString())
+                    create.viewModel.process(LabelUpdated(text?.toString()))
                 }
                 url.editText?.doAfterTextChanged { text ->
-                    create.viewModel.updateUrl(text?.toString())
+                    create.viewModel.process(UrlUpdated(text?.toString()))
                 }
             }
         }
     }
 
-    override fun handleEvent(event: BookmarkCreateEvent) = Unit
     override fun renderViewEffect(action: BookmarkCreateEffect) = Unit
+    override fun handleLoading(loader: ViewStateLoading) = Unit
 }

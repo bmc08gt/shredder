@@ -16,6 +16,7 @@ import dev.bmcreations.shredder.core.di.component
 import dev.bmcreations.shredder.core.extensions.*
 import dev.bmcreations.shredder.features.create.R
 import dev.bmcreations.shredder.features.create.di.BookmarkCreateComponent
+import dev.bmcreations.shredder.features.create.view.BookmarkCreateEvent
 import kotlinx.android.synthetic.main.fragment_expiration_selection.*
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.textColor
@@ -49,7 +50,7 @@ class BookmarkExpirationSelectionFragment : BaseFragment(), AnkoLogger {
         initializeMonthSelector()
         initializeYearSelector()
         setupDateSelectorForMonth(YearMonth.of(initialDate.whatYear, initialDate.monthOfYear))
-        create.viewModel.onExpirationSet(selectedDate())
+        create.viewModel.process(BookmarkCreateEvent.ExpirationSet(selectedDate()))
     }
 
     private fun initializeDateSelector() {
@@ -79,7 +80,7 @@ class BookmarkExpirationSelectionFragment : BaseFragment(), AnkoLogger {
                     calendarDay?.let { date_selector.notifyDateChanged(it.transformToSelectedMonth(selectedYearMonth())) }
                     calendarDay = day
                     date_selector.notifyDayChanged(day)
-                    create.viewModel.onExpirationSet(selectedDate(date?.dayOfMonth))
+                    create.viewModel.process(BookmarkCreateEvent.ExpirationSet(selectedDate(date?.dayOfMonth)))
                     setupDateSelectorForMonth(selectedYearMonth())
                 }
             }
@@ -119,7 +120,7 @@ class BookmarkExpirationSelectionFragment : BaseFragment(), AnkoLogger {
             val ym = selectedYearMonth()
             setupDateSelectorForMonth(ym)
             date = selectedDate(date?.dayOfMonth?.coerceToMaxDays(ym.month))
-            create.viewModel.onExpirationSet(selectedDate(date?.dayOfMonth?.coerceToMaxDays(ym.month)))
+            create.viewModel.process(BookmarkCreateEvent.ExpirationSet(selectedDate(date?.dayOfMonth?.coerceToMaxDays(ym.month))))
         }
     }
 
@@ -144,7 +145,7 @@ class BookmarkExpirationSelectionFragment : BaseFragment(), AnkoLogger {
                 val ym = selectedYearMonth()
                 date = selectedDate(date?.dayOfMonth?.coerceToMaxDays(ym.month))
                 setupDateSelectorForMonth(ym)
-                create.viewModel.onExpirationSet(date)
+                create.viewModel.process(BookmarkCreateEvent.ExpirationSet(date))
             }
         }
     }

@@ -21,7 +21,6 @@ abstract class StateDrivenActivity<T: ViewState, E: ViewStateEvent, X: ViewState
         lifecycleScope.launchWhenStarted { whenStarted() }
         lifecycleScope.launchWhenResumed { whenResumed() }
         viewModel.state.observe(this, viewStateObserver)
-        viewModel.events.observe(this, viewEventObserver)
         viewModel.effects.observe(this, viewEffectsObserver)
     }
 
@@ -30,22 +29,20 @@ abstract class StateDrivenActivity<T: ViewState, E: ViewStateEvent, X: ViewState
 
     abstract fun renderViewState(viewState: T)
     abstract fun renderViewEffect(action: X)
-    abstract fun handleEvent(event: E)
+    abstract fun handleLoading(loader: ViewStateLoading)
 
-    protected fun handleError(error: ViewStateError) {
+    protected open fun handleError(error: ViewStateError) {
         window.decorView.rootView.doOnLayout {
-            Snackbar.make(it, error.message(this), Snackbar.LENGTH_SHORT).show()
+            if (error.hasErrors()) {
+                Snackbar.make(it, error.message(this), Snackbar.LENGTH_SHORT).show()
+            }
         }
     }
+
 
     private val viewStateObserver = Observer<T> {
         Log.d(javaClass.simpleName, "observed viewState : $it")
         renderViewState(it)
-    }
-
-    private val viewEventObserver = Observer<E> {
-        Log.d(javaClass.simpleName,"observed view action : $it")
-        handleEvent(it)
     }
 
     private val viewEffectsObserver = Observer<X> {

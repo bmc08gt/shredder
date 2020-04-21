@@ -1,23 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/main_navigation"
-        app:startDestination="@id/home">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_navigation"
+    app:startDestination="@+id/list">
 
-    <fragment android:id="@+id/home"
-            android:name="dev.bmcreations.shredder.features.list.view.BookmarksListFragment"
-            android:label="@string/title_bookmark_list">
+    <fragment
+        android:id="@+id/list"
+        android:name="dev.bmcreations.shredder.features.list.view.BookmarksListFragment"
+        android:label="@string/title_bookmark_list">
+        <argument
+            android:name="from_login"
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <deepLink app:uri="shredder.app://list?from_login={from_login}" />
     </fragment>
 
-    <dialog android:id="@+id/create_bookmark"
+    <dialog
+        android:id="@+id/create_fab"
         android:name="dev.bmcreations.shredder.features.create.BookmarkCreator"
         android:label="Create a bookmark">
-        <deepLink app:uri="shredder://create"/>
+        <deepLink app:uri="shredder.app://create" />
     </dialog>
 
-    <activity android:id="@+id/login_or_create_account"
+    <fragment
+        android:id="@+id/login_or_create_account"
+        android:name="dev.bmcreations.shredder.login.view.LoginFragment"
         android:label="Login"
-        android:name="dev.bmcreations.shredder.login.view.LoginActivity">
-        <deepLink app:uri="shredder://login" />
-    </activity>
+        app:popUpTo="@id/list"
+        app:popUpToInclusive="true">
+        <deepLink app:uri="shredder.app://login" />
+    </fragment>
 </navigation>

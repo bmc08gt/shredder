@@ -5,6 +5,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            style="@style/AppTheme.Toolbar"
+            />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/bookmarks"
         android:layout_width="match_parent"
@@ -29,7 +42,20 @@
         android:layout_height="wrap_content"
         app:layout_anchor="@id/bottomAppBar"
         app:fabAlignmentMode="center"
+        android:transitionName="fab"
         android:src="@drawable/ic_add_color_control_normal_24dp"
         app:fabAnimationMode="scale"/>
+
+    <com.google.android.material.circularreveal.CircularRevealFrameLayout
+        android:id="@+id/sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="bottom|center_horizontal"
+        android:visibility="invisible"
+        app:layout_behavior="com.google.android.material.transformation.FabTransformationSheetBehavior"
+        android:background="@color/color_secondary">
+
+    </com.google.android.material.circularreveal.CircularRevealFrameLayout>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

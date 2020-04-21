@@ -8,6 +8,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dev.bmcreations.shredder.core.di.Components
 import dev.bmcreations.shredder.core.di.component
 import dev.bmcreations.shredder.features.create.di.BookmarkCreateComponent
+import dev.bmcreations.shredder.features.create.view.BookmarkCreateEvent
 
 class RemoveExpirationDialog : DialogFragment() {
 
@@ -18,7 +19,7 @@ class RemoveExpirationDialog : DialogFragment() {
         return MaterialAlertDialogBuilder(context, theme).apply {
             setTitle("Are you sure?")
             setPositiveButton("Yes") { dialog, _ ->
-                create.viewModel.onExpirationSet(null)
+                create.viewModel.process(BookmarkCreateEvent.ExpirationSet(null))
                 dialog.dismiss()
             }
             setNegativeButton("No") { dialog, _ ->
