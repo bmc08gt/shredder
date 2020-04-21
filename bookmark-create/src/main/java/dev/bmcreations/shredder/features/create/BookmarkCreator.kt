@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -25,6 +26,7 @@ import dev.bmcreations.shredder.core.lifecycle.ProvidedArguments
 import dev.bmcreations.shredder.features.create.di.BookmarkCreateComponent
 import dev.bmcreations.shredder.features.create.view.BookmarkCreateEvent
 import kotlinx.android.synthetic.main.dialog_bookmark_creator.*
+import kotlinx.coroutines.launch
 
 interface OnBookmarkCreatedListener {
     fun onBookmarkCreated()
@@ -71,11 +73,14 @@ class BookmarkCreator : BottomSheetDialogFragment(), OnBookmarkCreatedListener {
         navHost.navController.setGraph(R.navigation.navigation_create)
         toolbar.setupWithNavController(navHost.navController)
 
-        createComponent.viewModel.events.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is BookmarkCreateEvent.Created -> dismiss()
-            }
-        })
+        lifecycleScope.launch {
+            val bookmarks = createComponent.bookmarks.bar.bookmarks()
+            createComponent.bookmarks.bar.observeBookmarks().observe(viewLifecycleOwner, Observer {
+                if (it != bookmarks) {
+                    dismiss()
+                }
+            })
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {

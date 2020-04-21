@@ -12,5 +12,7 @@
     <color name="color_on_surface">#000000</color>
     <color name="color_background">#FAFAFA</color>
     <color name="color_on_background">#000000</color>
-    <color name="color_status_bar">#000000</color>
+    <color name="color_status_bar">#61D4B5</color>
+    <color name="color_toolbar">@color/color_status_bar</color>
+    <color name="color_on_toolbar">#000000</color>
 </resources>

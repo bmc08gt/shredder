@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight">
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Global color attributes -->
         <item name="colorPrimary">@color/color_secondary</item>
         <item name="colorPrimaryVariant">@color/color_primary_variant</item>
@@ -37,6 +37,16 @@
         <item name="bottomNavigationStyle">@style/AppBottomNavigation</item>
 <!--        <item name="bottomSheetStyle">@style/AppModalBottomSheet</item>-->
         <item name="bottomSheetDialogTheme">@style/AppModalBottomSheet</item>
+    </style>
+
+    <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
+        <item name="android:background">@color/color_toolbar</item>
+        <item name="titleTextColor">@color/color_on_toolbar</item>
+        <item name="android:theme">@style/ThemeOverlay.ToolbarTint</item>
+    </style>
+
+    <style name="ThemeOverlay.ToolbarTint" parent="ThemeOverlay.MaterialComponents.Toolbar.Surface">
+        <item name="colorControlNormal">@color/color_on_toolbar</item>
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -129,6 +139,15 @@
 
     <style name="AppTextField.Outlined" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="hintTextAppearance">@style/AppTextField.Outlined.TextApperance</item>
+        <item name="colorControlActivated">@color/color_on_surface</item>
+        <item name="colorControlNormal">@color/color_on_surface</item>
+        <item name="colorAccent">@color/color_on_surface</item>
+    </style>
+
+    <style name="AppTextField.Outlined.OnSurfaceLocked" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="hintTextAppearance">@style/AppTextField.Outlined.TextApperance</item>
+        <item name="colorControlActivated">@color/color_on_surface</item>
+        <item name="colorAccent">@color/color_on_surface</item>
     </style>
 
     <style name="AppTextField.Outlined.TextApperance" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">

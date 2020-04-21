@@ -1,6 +1,5 @@
-package dev.bmcreations.shredder.core.extensions
+package dev.bmcreations.shredder.base.ui.extensions
 
-import android.R.attr.animationDuration
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.app.Activity
@@ -8,10 +7,14 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.res.Resources
 import android.os.Build
+import android.os.VibrationEffect
+import android.os.Vibrator
 import android.view.DisplayCutout
 import android.view.View
 import android.view.WindowManager
+import android.view.animation.AnimationUtils
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import androidx.annotation.RequiresApi
 import androidx.appcompat.widget.AppCompatImageView
 import androidx.core.graphics.drawable.DrawableCompat
@@ -20,6 +23,7 @@ import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import dev.bmcreations.shredder.base.R
 
 /** Combination of all flags required to put activity into immersive mode */
 const val FLAGS_FULLSCREEN =
@@ -65,7 +69,8 @@ fun AlertDialog.showImmersive() {
     )
 
     // Make sure that the dialog's window is in full screen
-    window?.decorView?.systemUiVisibility = FLAGS_FULLSCREEN
+    window?.decorView?.systemUiVisibility =
+        FLAGS_FULLSCREEN
 
     // Show the dialog while still in immersive mode
     show()
@@ -82,7 +87,10 @@ val View.identifier: String
     get() {
         val r = this.resources
         r?.let {
-            if (id > 0 && resourceHasPackage(id)) {
+            if (id > 0 && resourceHasPackage(
+                    id
+                )
+            ) {
                 try {
                     val pkgname: String = when (id and -0x1000000) {
                         0x7f000000 -> "app"
@@ -154,6 +162,19 @@ fun FloatingActionButton.animateVisible(delay: Long) {
     }
 }
 
+fun FloatingActionButton.animateGone(delay: Long) {
+    apply {
+        isInvisible = true
+        scaleX = 0f
+        scaleY = 0f
+        doOnPreDraw {
+            postDelayed({
+                hide()
+            }, delay)
+        }
+    }
+}
+
 fun View.animateVisible(duration: Long) {
     animate()
         .alpha(1f)
@@ -165,13 +186,50 @@ fun View.animateVisible(duration: Long) {
         })
 }
 
-fun View.animateGone(duration: Long) {
+fun View.animateGone(duration: Long, delay: Long = 0, doOnDone: (() -> Unit)? = null) {
     animate()
         .alpha(0f)
+        .setStartDelay(delay)
         .setDuration(duration)
         .setListener(object : AnimatorListenerAdapter() {
-            override fun onAnimationEnd(animation: Animator) {
+            override fun onAnimationStart(animation: Animator?) {
                 isVisible = false
             }
+
+            override fun onAnimationEnd(animation: Animator?) {
+                doOnDone?.invoke()
+            }
         })
+}
+
+fun Button.shake(vibrate: Boolean = false) =
+    animate()
+        .xBy(-15f)
+        .withStartAction {
+            if (vibrate) {
+                context.getSystemService(Vibrator::class.java)?.vibrateCompat(500)
+            }
+        }
+        .withEndAction { animate().xBy(15f) }
+        .start()
+
+
+fun FloatingActionButton.shake(vibrate: Boolean = false) =
+    animate()
+        .xBy(-15f)
+        .withStartAction {
+            if (vibrate) {
+                context.getSystemService(Vibrator::class.java)?.vibrateCompat(500)
+            }
+        }
+        .withEndAction { animate().xBy(15f) }
+        .start()
+
+
+fun Vibrator.vibrateCompat(millis: Long = 1L, amplitude: Int = 25) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        vibrate(VibrationEffect.createOneShot(millis, amplitude))
+    } else {
+        vibrate(millis)
+    }
 }

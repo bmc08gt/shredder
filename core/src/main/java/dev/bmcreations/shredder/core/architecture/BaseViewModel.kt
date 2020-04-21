@@ -6,14 +6,11 @@ import androidx.lifecycle.ViewModel
 import com.zhuinden.eventemitter.EventEmitter
 import com.zhuinden.eventemitter.EventSource
 
-abstract class BaseViewModel<S: ViewState, E: ViewStateEvent, X: ViewStateEffect>(private val initialState: S) : ViewModel() {
+abstract class BaseViewModel<S: ViewState, E: ViewStateEvent, X: ViewStateEffect>(private val initialState: S) : ViewModel(), ViewModelContract<E> {
 
     val state: MutableLiveData<S> = MutableLiveData()
 
     protected fun getLastState(): S? = state.value ?: initialState
-
-    protected val eventEmitter = EventEmitter<E>()
-    val events: EventSource<E> get() = eventEmitter
 
     protected val effectsEmitter = EventEmitter<X>()
     val effects: EventSource<X> get() = effectsEmitter
@@ -51,4 +48,12 @@ abstract class BaseViewModel<S: ViewState, E: ViewStateEvent, X: ViewStateEffect
         titleResId: Int?,
         messageResId: Int?
     ): ViewStateError = ViewStateError(exception = exception, titleResId = titleResId, messageResId = messageResId)
+}
+
+/**
+ * Internal Contract to be implemented by ViewModel
+ * Required to intercept and log ViewEvents
+ */
+internal interface ViewModelContract<E: ViewStateEvent> {
+    fun process(event: E)
 }

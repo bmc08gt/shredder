@@ -11,6 +11,8 @@ import android.util.AttributeSet
 import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.AccelerateDecelerateInterpolator
+import android.view.animation.AccelerateInterpolator
 import android.view.animation.OvershootInterpolator
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.contains
@@ -34,6 +36,8 @@ data class SwipeArea(
     val startedSwipe: Boolean = false,
     val isSwiped: Boolean = false
 )
+
+typealias SuccessAnimationComplete = (() -> Unit)
 
 
 interface OnLoginInteractionListener {
@@ -78,6 +82,14 @@ class LoginSwipeContainer @JvmOverloads constructor(
     private val animatingRectF: RectF = RectF()
 
     private var swipeArea = SwipeArea()
+
+    private var successfulAuthentication: Boolean = false
+    set(value) {
+        field = value
+        if (value) {
+            successAnimation.start()
+        }
+    }
 
     private val options = mutableListOf(
         Login().apply {
@@ -163,6 +175,17 @@ class LoginSwipeContainer @JvmOverloads constructor(
             interpolator = OvershootInterpolator()
         }
 
+    @SuppressLint("ObjectAnimatorBinding")
+    private val successAnimation =
+        ObjectAnimator.ofFloat(
+            this,
+            "SuccessAnimationMultiplier",
+            .7f, 0f
+        ).apply {
+            duration = 600
+            interpolator = AccelerateInterpolator()
+        }
+
     private val colorAnimation =
         ObjectAnimator.ofObject(
             backgroundPaint,
@@ -187,11 +210,18 @@ class LoginSwipeContainer @JvmOverloads constructor(
             addUpdateListener { invalidate() }
         }
 
+    private var successAnimator: SuccessAnimationComplete? = null
+
+    fun setAuthenticationSuccessful(onAnimationDone: SuccessAnimationComplete?) {
+        successAnimator = onAnimationDone
+        successfulAuthentication = true
+    }
+
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
         canvas?.drawPaint(backgroundPaint)
         drawSwipeArea(canvas)
-        if (swipeArea.isSwiped) {
+        if (swipeArea.isSwiped && !successfulAuthentication) {
             drawOptions(canvas)
         }
     }
@@ -342,18 +372,44 @@ class LoginSwipeContainer @JvmOverloads constructor(
         invalidate()
     }
 
+    @Suppress("unused")
+    private fun setSuccessAnimationMultiplier(value: Float) {
+        updateSwipeArea {
+            copy(
+                isAnimating = value != 0f,
+                animationMultiplier = value,
+                isSwiped = true
+            )
+        }
+        if (swipeArea.animationMultiplier <= 0f) {
+            successAnimator?.invoke()
+        }
+        invalidate()
+    }
+
     private fun updateSwipeArea(stateModifier: SwipeArea.() -> SwipeArea) {
         swipeArea = stateModifier.invoke(swipeArea)
     }
 
-    private fun SwipeArea.top(rect: RectF) =
-        (bottom(rect) - rect.height() * if (isAnimating) animationMultiplier else if (isSwiped) .7f else .3f)
+    private fun SwipeArea.top(rect: RectF) = (bottom(rect) - rect.height() * multiplier())
+
+    private fun SwipeArea.multiplier(): Float {
+        return when {
+            isAnimating -> animationMultiplier
+            successfulAuthentication -> 0f
+            isSwiped -> .7f
+            else -> .3f
+        }
+    }
 
     private fun SwipeArea.bottom(rect: RectF) = rect.bottom
     private fun SwipeArea.left(rect: RectF) = rect.left
     private fun SwipeArea.right(rect: RectF) = rect.right
     private fun SwipeArea.width(rect: RectF) = right(rect) - left(rect)
     private fun SwipeArea.draw(canvas: Canvas?) {
+        if (!isAnimating && successfulAuthentication) {
+            return
+        }
         drawPath.apply {
             reset()
             moveTo(points.start.x.toFloat(), points.start.y.toFloat())

@@ -30,21 +30,32 @@ class BookmarkCreateViewModel private constructor(
     BookmarkCreateViewState(ViewStateLoading(loading = true))
 ), CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
-    fun createBookmark() {
+    override fun process(event: BookmarkCreateEvent) {
+        when (event) {
+            BookmarkCreateEvent.Create -> createBookmark()
+            is BookmarkCreateEvent.LoadBookmark -> loadBookmark(event.id)
+            is BookmarkCreateEvent.SelectGroup -> selectGroup(event.group)
+            is BookmarkCreateEvent.ExpirationSet -> onExpirationSet(event.date)
+            is BookmarkCreateEvent.LabelUpdated -> updateLabel(event.text)
+            is BookmarkCreateEvent.UrlUpdated -> updateUrl(event.url)
+        }
+    }
+
+    private fun createBookmark() {
         createBookmarkUseCase.execute {
             if (it != null) {
-                eventEmitter.emit(BookmarkCreateEvent.Created(it))
+                //eventEmitter.emit(BookmarkCreateEvent.Created(it))
             } else {
                 informOfError(title = "Error", message = "Failed to create bookmark.")
             }
         }
     }
 
-    fun loadBookmark(id: String?) {
+    private fun loadBookmark(id: String?) {
         loadBookmarkUseCase.execute(id) { populate() }
     }
 
-    fun selectGroup(group: Group) {
+    private fun selectGroup(group: Group) {
         setSelectedGroupUseCase.execute(group)
         populate()
     }
@@ -55,18 +66,18 @@ class BookmarkCreateViewModel private constructor(
 
     suspend fun groups(): LiveData<List<Group>> = getGroupsUseCase.execute()
 
-    fun onExpirationSet(date: LocalDate?) {
+    private fun onExpirationSet(date: LocalDate?) {
         date?.toDate().apply {
             setExpirationDateUseCase.execute(this)
             populate()
         }
     }
 
-    fun updateLabel(text: String?) {
+    private fun updateLabel(text: String?) {
         setTitleUseCase.execute(text)
     }
 
-    fun updateUrl(url: String?) {
+    private fun updateUrl(url: String?) {
         setUrlUseCase.execute(url)
     }
 
@@ -183,7 +194,12 @@ data class BookmarkCreateViewState(
 ) : ViewState
 
 sealed class BookmarkCreateEvent : ViewStateEvent() {
-    data class Created(val bookmark: Bookmark?) : BookmarkCreateEvent()
+    object Create : BookmarkCreateEvent()
+    data class LoadBookmark(val id: String?): BookmarkCreateEvent()
+    data class SelectGroup(val group: Group): BookmarkCreateEvent()
+    data class ExpirationSet(val date: LocalDate?): BookmarkCreateEvent()
+    data class LabelUpdated(val text: String?): BookmarkCreateEvent()
+    data class UrlUpdated(val url: String?): BookmarkCreateEvent()
 }
 
 sealed class BookmarkCreateEffect : ViewStateEffect()
