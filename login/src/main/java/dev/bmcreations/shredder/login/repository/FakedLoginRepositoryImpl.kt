@@ -24,31 +24,31 @@ class FakedLoginRepositoryImpl(
         }
     }
 
-    override fun createAccount(credentials: SignUpAttempt, cb: (NetworkResult<UserLogin>) -> Unit) {
+    override fun createAccount(attempt: SignUpAttempt, cb: (NetworkResult<User>) -> Unit) {
         launch(Dispatchers.IO) {
             sleep(1000)
-            val user = createUser(credentials)
+            val user = createUser(attempt)
             withContext(Dispatchers.Main) {
-                cb.invoke(NetworkResult.Success(UserLogin(user)))
+                cb.invoke(NetworkResult.Success(user))
             }
         }
     }
 
-    override fun login(credentials: LoginAttempt, cb: (NetworkResult<UserLogin>) -> Unit) {
+    override fun login(attempt: LoginAttempt, cb: (NetworkResult<User>) -> Unit) {
         launch(Dispatchers.IO) {
             sleep(2000)
             if (!failedOnce) {
                 failedOnce = true
                 withContext(Dispatchers.Main) {
-                    cb.invoke(NetworkResult.Failure("faked"))
+                    cb.invoke(NetworkResult.Failure(errorResponse = "faked"))
                 }
                 return@launch
             }
 
-            val user = createUser(credentials)
-            prefs.user = UserLogin(user)
+            val user = createUser(attempt)
+            prefs.user = user
             withContext(Dispatchers.Main) {
-                cb.invoke(NetworkResult.Success(UserLogin(user)))
+                cb.invoke(NetworkResult.Success(user))
             }
         }
     }

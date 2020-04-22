@@ -7,5 +7,5 @@ import dev.bmcreations.shredder.network.NetworkResult
 
 interface UserRepository {
     suspend fun getUser(): NetworkResult<User>
-    suspend fun createUser(request: CreateUserRequest): NetworkResult<UserLogin>
+    suspend fun createUser(request: CreateUserRequest): NetworkResult<User>
 }

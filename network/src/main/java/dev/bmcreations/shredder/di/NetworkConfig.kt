@@ -2,11 +2,13 @@ package dev.bmcreations.shredder.di
 
 import dev.bmcreations.shredder.core.di.Component
 import dev.bmcreations.shredder.models.NetworkConfig
+import dev.bmcreations.shredder.network.BuildConfig
 import dev.bmcreations.shredder.network.manifest.service.WebManifestService
 import dev.bmcreations.shredder.network.manifest.repository.NetworkWebManifestRepositoryImpl
 import dev.bmcreations.shredder.network.manifest.repository.WebManifestRepository
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.CallAdapter
 import retrofit2.Converter
 import retrofit2.Retrofit
@@ -27,6 +29,12 @@ open class BaseNetworkComponent(
     init {
         interceptors.forEach { interceptor ->
             okHttpClientBuilder.addInterceptor(interceptor)
+        }
+
+        if (BuildConfig.DEBUG) {
+            okHttpClientBuilder.addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
         }
     }
 

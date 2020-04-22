@@ -11,7 +11,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 fun Application.environmentDimensionNetworkComponent(): NetworkComponent {
     return BaseNetworkComponent(
         networkConfig = NetworkConfig(
-            baseUrl = "https://staging.shredder.mcan.sh/api"
+            baseUrl = "https://staging.shredder.app"
         ),
         converters = listOf(GraphQLConverter.create(this), GsonConverterFactory.create(Gson()))
     )

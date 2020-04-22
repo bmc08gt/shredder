@@ -23,7 +23,7 @@ class NetworkWebManifestRepositoryImpl(
                     return NetworkResult.Success(manifest)
                 }
             } else {
-                val jsonResponse = webService.loadManifest(url.withManifestJson()).await()
+                val jsonResponse = webService.loadJson(url.withManifestJson()).await()
                 if (jsonResponse.isSuccessful) {
                     val manifest = jsonResponse.body()
                     if (manifest != null) {
@@ -33,9 +33,9 @@ class NetworkWebManifestRepositoryImpl(
                     errorMessage = jsonResponse.message()
                 }
             }
-            return NetworkResult.Failure(errorMessage)
+            return NetworkResult.Failure(errorResponse = errorMessage)
         } catch (e: Exception) {
-            return NetworkResult.Failure(e.localizedMessage)
+            return NetworkResult.Failure(errorResponse = e.localizedMessage)
         }
     }
 }

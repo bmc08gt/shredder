@@ -9,11 +9,11 @@ import retrofit2.http.Body
 import retrofit2.http.POST
 
 interface UserService {
-    @POST
+    @POST("api")
     @GraphQuery("GetUser")
-    fun getUserAync(@Body query: QueryContainerBuilder): Deferred<GetUserResponse>
+    suspend fun getUserAync(@Body query: QueryContainerBuilder): GetUserResponse
 
-    @POST
+    @POST("api")
     @GraphQuery("CreateUser")
-    fun createUserAync(@Body query: QueryContainerBuilder): Deferred<CreateUserResponse>
+    suspend fun createUserAsync(@Body query: QueryContainerBuilder): CreateUserResponse
 }

@@ -98,37 +98,29 @@ class LoginViewModel private constructor(
                             }
                         }
                     } else {
-                        informOfError(message = "Please enter proper credentials")
+                        informOfError(message = "Password must be equal to or longer than 8 characters")
                         effectsEmitter.emit(DisplayErrorAuthenticating)
                         effectsEmitter.emit(EnableInteraction)
                     }
                 }
             } else {
                 val request = LoginAttempt(state.loginInfo.credentials)
-                validateCredentialsUseCase.execute(request.credentials) {
-                    if (it) {
-                        loginUseCase.execute(request) { result ->
-                            when (result) {
-                                is NetworkResult.Success -> {
-                                    effectsEmitter.emit(DisplaySuccess)
-                                    setState {
-                                        copy(loading = ViewStateLoading(),
-                                            error = ViewStateError(),
-                                            loginInfo = this.loginInfo.copy(success = true)
-                                        )
-                                    }
-                                }
-                                is NetworkResult.Failure -> {
-                                    informOfError(message = result.errorResponse)
-                                    effectsEmitter.emit(DisplayErrorAuthenticating)
-                                    effectsEmitter.emit(EnableInteraction)
-                                }
+                loginUseCase.execute(request) { result ->
+                    when (result) {
+                        is NetworkResult.Success -> {
+                            effectsEmitter.emit(DisplaySuccess)
+                            setState {
+                                copy(loading = ViewStateLoading(),
+                                    error = ViewStateError(),
+                                    loginInfo = this.loginInfo.copy(success = true)
+                                )
                             }
                         }
-                    } else {
-                        informOfError(message = "Please enter proper credentials")
-                        effectsEmitter.emit(DisplayErrorAuthenticating)
-                        effectsEmitter.emit(EnableInteraction)
+                        is NetworkResult.Failure -> {
+                            informOfError(message = "error")
+                            effectsEmitter.emit(DisplayErrorAuthenticating)
+                            effectsEmitter.emit(EnableInteraction)
+                        }
                     }
                 }
             }
