@@ -7,6 +7,8 @@ import androidx.core.view.doOnLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
+import org.jetbrains.anko.support.v4.toast
+import org.jetbrains.anko.toast
 
 abstract class StateDrivenActivity<T: ViewState, E: ViewStateEvent, X: ViewStateEffect, V : BaseViewModel<T, E, X>> : AppCompatActivity() {
 
@@ -32,10 +34,8 @@ abstract class StateDrivenActivity<T: ViewState, E: ViewStateEvent, X: ViewState
     abstract fun handleLoading(loader: ViewStateLoading)
 
     protected open fun handleError(error: ViewStateError) {
-        window.decorView.rootView.doOnLayout {
-            if (error.hasErrors()) {
-                Snackbar.make(it, error.message(this), Snackbar.LENGTH_SHORT).show()
-            }
+        if (error.hasErrors()) {
+            toast(error.message(this))
         }
     }
 

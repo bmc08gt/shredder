@@ -91,14 +91,14 @@ class LoginViewModel private constructor(
                                     }
                                 }
                                 is NetworkResult.Failure -> {
-                                    informOfError(message = result.errorResponse)
+                                    informOfError(message = result.errorMessage())
                                     effectsEmitter.emit(DisplayErrorAuthenticating)
                                     effectsEmitter.emit(EnableInteraction)
                                 }
                             }
                         }
                     } else {
-                        informOfError(message = "Password must be equal to or longer than 8 characters")
+                        informOfError(message = "Password must be equal to or longer than 10 characters")
                         effectsEmitter.emit(DisplayErrorAuthenticating)
                         effectsEmitter.emit(EnableInteraction)
                     }
@@ -117,7 +117,7 @@ class LoginViewModel private constructor(
                             }
                         }
                         is NetworkResult.Failure -> {
-                            informOfError(message = "error")
+                            informOfError(message = result.errorMessage())
                             effectsEmitter.emit(DisplayErrorAuthenticating)
                             effectsEmitter.emit(EnableInteraction)
                         }

@@ -21,7 +21,7 @@ class LoginRepositoryImpl(
     private val userWebService: UserRepository
 ) : LoginViewRepository, RequestResolver, CoroutineScope by CoroutineScope(Dispatchers.Main) {
     override fun validateCredentials(credentials: LoginCredential, cb: (Boolean) -> Unit) {
-        cb.invoke(credentials.password.trimmedLength() >= 8)
+        cb.invoke(credentials.password.trimmedLength() >= 10)
     }
 
     override fun createAccount(attempt: SignUpAttempt, cb: (NetworkResult<User>) -> Unit) {

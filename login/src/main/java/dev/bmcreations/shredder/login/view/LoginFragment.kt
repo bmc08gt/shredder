@@ -58,12 +58,6 @@ class LoginFragment :
         }
     }
 
-    override fun handleError(error: ViewStateError) {
-        if (error.hasErrors()) {
-            toast("Invalid credentials")
-        }
-    }
-
     override fun renderViewEffect(action: LoginViewEffect) {
         when (action) {
             is TriggerSwipeAlphaAnimations -> {

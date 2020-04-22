@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
+import org.jetbrains.anko.support.v4.toast
 
 abstract class StateDrivenFragment<T: ViewState, E: ViewStateEvent, X: ViewStateEffect, V : BaseViewModel<T, E, X>> : Fragment() {
 
@@ -56,9 +57,9 @@ abstract class StateDrivenFragment<T: ViewState, E: ViewStateEvent, X: ViewState
     abstract fun handleLoading(loader: ViewStateLoading)
 
     protected open fun handleError(error: ViewStateError) {
-        activity?.window?.decorView?.rootView?.doOnLayout { decorView ->
+        if (error.hasErrors()) {
             context?.let {
-                Snackbar.make(decorView, error.message(it), Snackbar.LENGTH_SHORT).show()
+                toast(error.message(it))
             }
         }
     }
