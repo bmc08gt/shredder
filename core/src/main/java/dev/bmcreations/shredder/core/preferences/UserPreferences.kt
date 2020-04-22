@@ -3,16 +3,17 @@ package dev.bmcreations.shredder.core.preferences
 import android.content.Context
 import androidx.core.content.edit
 import com.google.gson.Gson
+import dev.bmcreations.shredder.models.User
 import dev.bmcreations.shredder.models.UserLogin
 
 class UserPreferences(appContext: Context) {
 
     private val gson = Gson()
 
-    var user: UserLogin? = null
+    var user: User? = null
         set(value) {
             field = value
-            prefs.edit { putString(USER, gson.toJson(value, UserLogin::class.java)) }
+            prefs.edit { putString(USER, gson.toJson(value, User::class.java)) }
             isLoggedIn = value != null
         }
 
@@ -23,7 +24,7 @@ class UserPreferences(appContext: Context) {
 
     init {
         val userString = prefs.getString(USER, null)
-        user = gson.fromJson(userString, UserLogin::class.java)
+        user = gson.fromJson(userString, User::class.java)
     }
 
     companion object {

@@ -10,15 +10,15 @@ data class UserLogin(
     val user: User
 ) : Parcelable
 
-class CreateUserResponse : GraphResult<CreateUserResult, UserLogin>() {
+class CreateUserResponse : GraphResult<CreateUserResult, User>() {
     override fun hasData(): Boolean = data?.createUser != null
-    override fun result(): UserLogin? = data?.createUser
+    override fun result(): User? = data?.createUser
 }
-data class CreateUserResult(val createUser: UserLogin)
+data class CreateUserResult(val createUser: User)
 
-class LoginResponse : GraphResult<LoginResult, UserLogin>() {
+class LoginResponse : GraphResult<LoginResult, User>() {
     override fun hasData(): Boolean = data?.login != null
-    override fun result(): UserLogin? = data?.login
+    override fun result(): User? = data?.login
 }
-data class LoginResult(val login: UserLogin)
+data class LoginResult(val login: User)
 

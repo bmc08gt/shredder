@@ -14,6 +14,9 @@ import dev.bmcreations.shredder.login.view.LoginViewModel
 import dev.bmcreations.shredder.network.login.repository.LoginNetworkRepositoryImpl
 import dev.bmcreations.shredder.network.login.repository.LoginRepository
 import dev.bmcreations.shredder.network.login.service.LoginService
+import dev.bmcreations.shredder.network.user.repository.UserNetworkRepositoryImpl
+import dev.bmcreations.shredder.network.user.repository.UserRepository
+import dev.bmcreations.shredder.network.user.service.UserService
 import retrofit2.Retrofit
 
 interface LoginComponent : Component {
@@ -24,11 +27,17 @@ interface LoginComponent : Component {
 
 abstract class LoginNetworkComponent : NetworkComponent {
     abstract val login: LoginRepository
+    abstract val user: UserRepository
 }
 
 class LoginNetworkComponentImpl(environment: NetworkComponent) : LoginNetworkComponent() {
     override val retrofit: Retrofit = environment.retrofit
-    override val login: LoginRepository =  LoginNetworkRepositoryImpl(retrofit.create(LoginService::class.java))
+    override val login: LoginRepository = LoginNetworkRepositoryImpl(
+        retrofit.create(LoginService::class.java)
+    )
+    override val user: UserRepository = UserNetworkRepositoryImpl(
+        retrofit.create(UserService::class.java)
+    )
 }
 
 class LoginComponentImpl(
@@ -38,10 +47,10 @@ class LoginComponentImpl(
 
     private enum class ImplType { LIVE, FAKED }
 
-    private val implementation = ImplType.FAKED
+    private val implementation = ImplType.LIVE
 
     private val repository: LoginViewRepository = when (implementation) {
-        ImplType.LIVE -> LoginRepositoryImpl(core.prefs, network.login)
+        ImplType.LIVE -> LoginRepositoryImpl(core.prefs, network.login, network.user)
         ImplType.FAKED -> FakedLoginRepositoryImpl(core.prefs)
     }
 

@@ -1,47 +1,45 @@
 mutation(
-  $firstName: String!
-  $lastName: String!
-  $email: String!
-  $password: String!
+    $firstName: String!
+    $lastName: String!
+    $email: String!
+    $password: String!
 ) {
-  createUser(
-    firstName: $firstName
-    lastName: $lastName
-    email: $email
-    password: $password
-  ) {
-    user {
-      id
-      firstName
-      lastName
-      fullName
-      email
-      bookmarks {
+    createUser(
+        firstName: $firstName
+        lastName: $lastName
+        email: $email
+        password: $password
+    ) {
         id
-        label
-        icon
-        url
-        createdAt
-        updatedAt
-        expiresAt
-        groupId
-      }
-      groups {
-        id
-        label
-        createdAt
-        updatedAt
+        firstName
+        lastName
+        fullName
+        email
         bookmarks {
-          id
-          label
-          icon
-          url
-          createdAt
-          updatedAt
-          expiresAt
-          groupId
+            id
+            label
+            icon
+            url
+            createdAt
+            updatedAt
+            expiresAt
+            groupId
         }
-      }
+        groups {
+            id
+            label
+            createdAt
+            updatedAt
+            bookmarks {
+                id
+                label
+                icon
+                url
+                createdAt
+                updatedAt
+                expiresAt
+                groupId
+            }
+        }
     }
-  }
 }

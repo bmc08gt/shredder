@@ -14,6 +14,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import android.view.animation.AccelerateInterpolator
 import android.view.animation.OvershootInterpolator
+import androidx.core.animation.doOnEnd
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.contains
 import androidx.core.view.GestureDetectorCompat
@@ -214,7 +215,12 @@ class LoginSwipeContainer @JvmOverloads constructor(
 
     fun setAuthenticationSuccessful(onAnimationDone: SuccessAnimationComplete?) {
         successAnimator = onAnimationDone
-        successfulAuthentication = true
+        reverseColorAnimation.apply {
+            doOnEnd {
+                successfulAuthentication = true
+            }
+            start()
+        }
     }
 
     override fun onDraw(canvas: Canvas?) {
