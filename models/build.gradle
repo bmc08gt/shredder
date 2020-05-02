@@ -8,5 +8,7 @@ dependencies {
     api deps.retrofit.graphql_annotation_processor
     api deps.retrofit.gson
 
+    implementation deps.jetpack.room_runtime
+
     implementation deps.okhttp3
 }

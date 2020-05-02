@@ -14,7 +14,7 @@ import java.util.*
 class BookmarksBar(
     private val bookmarkDao: BookmarksDao,
     private val groupsDao: GroupsDao
-): CoroutineScope by CoroutineScope(Dispatchers.Main) {
+): CoroutineScope by CoroutineScope(Dispatchers.IO) {
 
     // get
     suspend fun bookmarks(): List<Bookmark> {
@@ -23,6 +23,10 @@ class BookmarksBar(
 
     suspend fun observeBookmarks(): LiveData<List<Bookmark>> {
         return bookmarkDao.selectAllStream()
+    }
+
+    suspend fun getLastBookmark(): Bookmark? {
+        return bookmarkDao.lastCreatedBookmark()
     }
 
     fun groups(): List<Group> {
@@ -47,7 +51,6 @@ class BookmarksBar(
 
     suspend fun findByTitle(title: String): Bookmark? {
         return bookmarkDao.findByTitle(title)
-
     }
 
     suspend fun findByExpiration(date: Date): List<Bookmark> {

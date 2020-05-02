@@ -9,8 +9,8 @@ import retrofit2.http.Url
 interface WebManifestService {
 
     @GET
-    fun loadManifest(@Url url: String): Deferred<Response<WebManifest>>
+    suspend fun loadManifest(@Url url: String): WebManifest?
 
     @GET
-    fun loadJson(@Url url: String): Deferred<Response<WebManifest>>
+    suspend fun loadJson(@Url url: String): WebManifest?
 }

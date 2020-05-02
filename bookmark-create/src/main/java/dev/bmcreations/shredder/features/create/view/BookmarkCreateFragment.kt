@@ -46,9 +46,8 @@ class BookmarkCreateFragment: StateDrivenFragment<BookmarkCreateViewState, Bookm
     override suspend fun whenResumed() {
         super.whenResumed()
         create.viewModel.groups().observe(viewLifecycleOwner, Observer {
-            updateGroups(it ?: emptyList())
+            create.viewModel.process(GroupsUpdated(it))
         })
-        updateGroups()
     }
 
     override fun initView() {
@@ -104,6 +103,7 @@ class BookmarkCreateFragment: StateDrivenFragment<BookmarkCreateViewState, Bookm
                 url.editText?.doAfterTextChanged { text ->
                     create.viewModel.process(UrlUpdated(text?.toString()))
                 }
+                updateGroups(data.groups)
             }
         }
     }

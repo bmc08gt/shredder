@@ -1,6 +1,7 @@
 package dev.bmcreations.shredder.models
 
 import android.os.Parcelable
+import androidx.room.Relation
 import kotlinx.android.parcel.Parcelize
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 

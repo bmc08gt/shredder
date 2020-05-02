@@ -13,7 +13,7 @@ def deps = [:]
 
 def versions = [:]
 versions.plugin_android_maven = "1.3"
-versions.plugin_build_tools = '4.1.0-alpha06'
+versions.plugin_build_tools = '4.1.0-alpha07'
 versions.plugin_google_services = "4.3.0"
 versions.plugin_fabric = '1.+'
 versions.plugin_firebase = '1.2.0'
@@ -41,6 +41,7 @@ versions.support = "29.0.0"
 versions.retrofit = "2.7.0"
 versions.anko = '0.10.8'
 versions.coil = '0.8.0'
+versions.store = "4.0.0-alpha05"
 
 versions.firebase_auth = "17.0.0"
 versions.firebase_auth_ui = "4.3.1"
@@ -150,5 +151,6 @@ deps.observablescrolling = "com.github.ksoichiro:android-observablescrollview:1.
 deps.calendar = "com.github.kizitonwose:CalendarView:0.3.1"
 deps.event_emitter = "com.github.Zhuinden:event-emitter:1.1.0"
 deps.lottie =  "com.airbnb.android:lottie:3.4.0"
+deps.store = "com.dropbox.mobile.store:store4:$versions.store"
 
 ext.deps = deps

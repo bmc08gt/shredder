@@ -26,6 +26,7 @@ import dev.bmcreations.shredder.core.lifecycle.ProvidedArguments
 import dev.bmcreations.shredder.features.create.di.BookmarkCreateComponent
 import dev.bmcreations.shredder.features.create.view.BookmarkCreateEvent
 import kotlinx.android.synthetic.main.dialog_bookmark_creator.*
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 interface OnBookmarkCreatedListener {
@@ -73,13 +74,16 @@ class BookmarkCreator : BottomSheetDialogFragment(), OnBookmarkCreatedListener {
         navHost.navController.setGraph(R.navigation.navigation_create)
         toolbar.setupWithNavController(navHost.navController)
 
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             val bookmarks = createComponent.bookmarks.bar.bookmarks()
-            createComponent.bookmarks.bar.observeBookmarks().observe(viewLifecycleOwner, Observer {
-                if (it != bookmarks) {
-                    dismiss()
-                }
-            })
+            lifecycleScope.launch {
+                createComponent.bookmarks.bar.observeBookmarks()
+                    .observe(viewLifecycleOwner, Observer {
+                        if (it != bookmarks) {
+                            dismiss()
+                        }
+                    })
+            }
         }
     }
 

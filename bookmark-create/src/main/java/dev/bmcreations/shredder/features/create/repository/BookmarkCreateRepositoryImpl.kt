@@ -50,7 +50,7 @@ class BookmarkCreateRepositoryImpl(
         val created = editData.createBookmark()
         bookmarkComponent.bar.upsert(created)
         launch(Dispatchers.IO) {
-            val result = bookmarkComponent.bar.findById(created.id)
+            val result = bookmarkComponent.bar.getLastBookmark()
             launch(Dispatchers.Main) { cb.invoke(result) }
         }
     }

@@ -16,7 +16,9 @@ class Shredder : Application() {
                 Components.LOGIN,
                 LoginComponentImpl(Components.CORE.component())
             )
-            inject(Components.BOOKMARKS, BookmarksComponentImpl())
+            inject(Components.BOOKMARKS,
+                BookmarksComponentImpl(Components.CORE.component())
+            )
             inject(
                 Components.BOOKMARKS_LIST,
                 BookmarkListComponentImpl(

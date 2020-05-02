@@ -38,6 +38,7 @@ class BookmarkCreateViewModel private constructor(
             is BookmarkCreateEvent.ExpirationSet -> onExpirationSet(event.date)
             is BookmarkCreateEvent.LabelUpdated -> updateLabel(event.text)
             is BookmarkCreateEvent.UrlUpdated -> updateUrl(event.url)
+            is BookmarkCreateEvent.GroupsUpdated -> updateGroups(event.groups)
         }
     }
 
@@ -81,18 +82,25 @@ class BookmarkCreateViewModel private constructor(
         setUrlUseCase.execute(url)
     }
 
-    private fun populate() {
-        val edits = BookmarkEditData(
-            title = getTitleUseCase.execute(),
-            url = getUrlUseCase.execute(),
-            group = getSelectedGroupUseCase.execute(),
-            expiration = getExpirationDateUseCase.execute()
-        )
-        state.value = getLastState()?.copy(
-            loading = ViewStateLoading(),
-            error = ViewStateError(),
-            data = edits
-        )
+    private fun updateGroups(groups: List<Group>) {
+        populate(groups)
+    }
+
+    private fun populate(updatedGroups: List<Group>? = null) {
+        setState {
+            val existingGroups = data.groups
+            copy(
+                loading = ViewStateLoading(),
+                error = ViewStateError(),
+                data = data.copy(
+                    title = getTitleUseCase.execute(),
+                    url = getUrlUseCase.execute(),
+                    group = getSelectedGroupUseCase.execute(),
+                    expiration = getExpirationDateUseCase.execute(),
+                    groups = updatedGroups ?: existingGroups
+                )
+            )
+        }
     }
 
     override fun informOfLoading(message: String) {
@@ -162,6 +170,7 @@ data class BookmarkEditData(
     val title: String? = null,
     val url: String? = null,
     val group: Group? = null,
+    val groups: List<Group> = emptyList(),
     val expiration: Date? = null
 )
 
@@ -197,6 +206,7 @@ sealed class BookmarkCreateEvent : ViewStateEvent() {
     object Create : BookmarkCreateEvent()
     data class LoadBookmark(val id: String?): BookmarkCreateEvent()
     data class SelectGroup(val group: Group): BookmarkCreateEvent()
+    data class GroupsUpdated(val groups: List<Group>): BookmarkCreateEvent()
     data class ExpirationSet(val date: LocalDate?): BookmarkCreateEvent()
     data class LabelUpdated(val text: String?): BookmarkCreateEvent()
     data class UrlUpdated(val url: String?): BookmarkCreateEvent()

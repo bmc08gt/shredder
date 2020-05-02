@@ -22,29 +22,16 @@ class InMemoryBookmarksDao : BookmarksDao, CoroutineScope by CoroutineScope(Disp
 
     private val emitter = MutableLiveData<List<Bookmark>>()
 
-    init {
-        itemsInBar.apply {
-            for (i in 0 until 5) {
-                Bookmark(
-                    title = "bookmark $i",
-                    site = Website(
-                        url = "https://bmcreations.dev"
-                    ),
-                    expiration = now.plusDays(60 + i)
-                ).also {
-                    put(it.id, it)
-                }
-            }
-            emit()
-        }
-    }
-
     override suspend fun selectAll(): List<Bookmark> {
         return itemsInBar.values.toList().sortedBy { it.expiration }
     }
 
     override suspend fun selectAllStream(): LiveData<List<Bookmark>> {
         return emitter
+    }
+
+    override suspend fun lastCreatedBookmark(): Bookmark? {
+        return itemsInBar.values.toList().sortedBy { it.createdAt }.firstOrNull()
     }
 
     override suspend fun findById(id: String): Bookmark? {

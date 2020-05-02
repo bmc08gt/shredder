@@ -9,4 +9,8 @@ dependencies {
     implementation deps.kotlin.coroutinesAndroid
 
     implementation deps.jetpack.lifecycle_extensions
+
+    implementation deps.jetpack.room_runtime
+    implementation deps.jetpack.roomktx
+    kapt deps.jetpack.room_compiler
 }

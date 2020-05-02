@@ -13,6 +13,8 @@ interface BookmarksDao {
 
     suspend fun selectAllStream(): LiveData<List<Bookmark>>
 
+    suspend fun lastCreatedBookmark(): Bookmark?
+
     suspend fun findById(id: String): Bookmark?
 
     suspend fun findByUrl(url: String): Bookmark?

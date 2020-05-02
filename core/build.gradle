@@ -22,4 +22,6 @@ dependencies {
     api deps.anko.commons
 
     api deps.event_emitter
+
+    api deps.store
 }

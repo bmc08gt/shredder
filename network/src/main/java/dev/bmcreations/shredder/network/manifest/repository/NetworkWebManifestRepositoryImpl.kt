@@ -15,27 +15,23 @@ class NetworkWebManifestRepositoryImpl(
         jsonTarget: Boolean
     ): NetworkResult<WebManifest> {
         try {
-            val manifestResponse = webService.loadManifest(url.withManifest()).await()
-            var errorMessage: String? = null
-            if (manifestResponse.isSuccessful) {
-                val manifest = manifestResponse.body()
-                if (manifest != null) {
-                    return NetworkResult.Success(manifest)
-                }
+            val manifestResponse = webService.loadManifest(url.withManifest())
+            return if (manifestResponse != null) {
+                NetworkResult.Success(manifestResponse)
             } else {
-                val jsonResponse = webService.loadJson(url.withManifestJson()).await()
-                if (jsonResponse.isSuccessful) {
-                    val manifest = jsonResponse.body()
-                    if (manifest != null) {
-                        return NetworkResult.Success(manifest)
-                    }
-                } else {
-                    errorMessage = jsonResponse.message()
-                }
+                NetworkResult.Failure(errorResponse = "Failed to pull manifest response for icon")
             }
-            return NetworkResult.Failure(errorResponse = errorMessage)
         } catch (e: Exception) {
-            return NetworkResult.Failure(errorResponse = e.localizedMessage)
+            return try {
+                val jsonResponse = webService.loadJson(url.withManifestJson())
+                if (jsonResponse != null) {
+                    NetworkResult.Success(jsonResponse)
+                } else {
+                    NetworkResult.Failure(errorResponse = "Failed to pull manifest response for icon")
+                }
+            } catch (e: Exception) {
+                NetworkResult.Failure(errorResponse = e.localizedMessage)
+            }
         }
     }
 }
