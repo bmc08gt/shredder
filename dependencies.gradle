@@ -13,14 +13,15 @@ def deps = [:]
 
 def versions = [:]
 versions.plugin_android_maven = "1.3"
-versions.plugin_build_tools = '4.1.0-alpha07'
+versions.plugin_build_tools = '4.2.0-alpha02'
 versions.plugin_google_services = "4.3.0"
 versions.plugin_fabric = '1.+'
 versions.plugin_firebase = '1.2.0'
-versions.kotlin = '1.3.71'
+versions.kotlin = "1.4-M3"
 versions.kotlinx_coroutines = '1.3.2-1.3.60'
 versions.plugin_androidx_navigation_safe_args = '2.2.0-rc03'
 
+versions.compose = '0.1.0-dev15'
 versions.android_ktx = '1.3.0-beta01'
 versions.androidx_lifecycle = '2.2.0'
 versions.androidx_navigation = '2.3.0-alpha04'
@@ -90,6 +91,17 @@ jetpack.camera_core = "androidx.camera:camera-core:$versions.androidx_camerax"
 jetpack.camera2 = "androidx.camera:camera-camera2:$versions.androidx_camerax"
 jetpack.media = "androidx.media:media:1.2.0-alpha01"
 deps.jetpack = jetpack
+
+def compose = [:]
+compose.runtime = "androidx.compose.runtime:runtime:$versions.compose"
+compose.ui =  "androidx.compose.ui:ui:$versions.compose"
+compose.foundation = "androidx.compose.ui:ui:$versions.compose"
+compose.material = "androidx.compose.material:material:$versions.compose"
+compose.materialIcons = "androidx.compose.material:material-icons-extended:$versions.compose"
+compose.foundation = "androidx.compose.foundation:foundation:$versions.compose"
+compose.animation = "androidx.compose.animation:animation:$versions.compose"
+
+deps.jetpack.compose = compose
 
 def test = [:]
 test.junit = "androidx.test.ext:junit:1.1.2-alpha03"
