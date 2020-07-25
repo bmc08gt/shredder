@@ -2,10 +2,10 @@ package dev.bmcreations.shredder.features.create.usecases
 
 import dev.bmcreations.shredder.core.architecture.GetUsecase
 import dev.bmcreations.shredder.features.create.repository.BookmarkCreateRepository
-import dev.bmcreations.shredder.models.Group
+import java.util.*
 
-class GetSelectedGroupUsecase(
+class GetExpirationDateUseCase(
     private val repository: BookmarkCreateRepository
-) : GetUsecase<Group?>(){
-    override fun execute(): Group? = repository.selectedGroup()
+) {
+    operator fun invoke(): Date? = repository.getExpirationDate()
 }

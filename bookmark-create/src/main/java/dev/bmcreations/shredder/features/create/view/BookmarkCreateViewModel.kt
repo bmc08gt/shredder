@@ -15,17 +15,17 @@ import org.threeten.bp.LocalDate
 import java.util.*
 
 class BookmarkCreateViewModel private constructor(
-    private val loadBookmarkUseCase: LoadBookmarkUsecase,
-    private val getGroupsUseCase: GetGroupsLiveDataUsecase,
-    private val getSelectedGroupUseCase: GetSelectedGroupUsecase,
-    private val setSelectedGroupUseCase: SelectGroupUsecase,
-    private val getTitleUseCase: GetTitleUsecase,
-    private val setTitleUseCase: SetTitleUsecase,
-    private val getUrlUseCase: GetUrlUsecase,
-    private val setUrlUseCase: SetUrlUsecase,
-    private val getExpirationDateUseCase: GetExpirationDateUsecase,
-    private val setExpirationDateUseCase: SetExpirationDateUsecase,
-    private val createBookmarkUseCase: CreateBookmarkUsecase
+    private val loadBookmark: LoadBookmarkUseCase,
+    private val getGroups: GetGroupsLiveDataUseCase,
+    private val getSelectedGroup: GetSelectedGroupUseCase,
+    private val setSelectedGroup: SelectGroupUseCase,
+    private val getLabel: GetLabelUseCase,
+    private val setLabel: SetLabelUseCase,
+    private val getUrl: GetUrlUseCase,
+    private val setUrl: SetUrlUseCase,
+    private val getExpirationDate: GetExpirationDateUseCase,
+    private val setExpirationDate: SetExpirationDateUseCase,
+    private val createBookmark: CreateBookmarkUseCase
 ) : BaseViewModel<BookmarkCreateViewState, BookmarkCreateEvent, BookmarkCreateEffect>(
     BookmarkCreateViewState(ViewStateLoading(loading = true))
 ), CoroutineScope by CoroutineScope(Dispatchers.Main) {
@@ -43,7 +43,7 @@ class BookmarkCreateViewModel private constructor(
     }
 
     private fun createBookmark() {
-        createBookmarkUseCase.execute {
+        createBookmark {
             if (it != null) {
                 //eventEmitter.emit(BookmarkCreateEvent.Created(it))
             } else {
@@ -52,34 +52,30 @@ class BookmarkCreateViewModel private constructor(
         }
     }
 
-    private fun loadBookmark(id: String?) {
-        loadBookmarkUseCase.execute(id) { populate() }
-    }
+    private fun loadBookmark(id: String?) = loadBookmark(id) { populate() }
 
     private fun selectGroup(group: Group) {
-        setSelectedGroupUseCase.execute(group)
+        setSelectedGroup(group)
         populate()
     }
 
-    fun selectedGroup(): Group? {
-        return getSelectedGroupUseCase.execute()
-    }
+    fun selectedGroup(): Group? = getSelectedGroup()
 
-    suspend fun groups(): LiveData<List<Group>> = getGroupsUseCase.execute()
+    suspend fun groups(): LiveData<List<Group>> = getGroups()
 
     private fun onExpirationSet(date: LocalDate?) {
-        date?.toDate().apply {
-            setExpirationDateUseCase.execute(this)
+        with(date?.toDate()) {
+            setExpirationDate(this)
             populate()
         }
     }
 
     private fun updateLabel(text: String?) {
-        setTitleUseCase.execute(text)
+        setLabel(text)
     }
 
     private fun updateUrl(url: String?) {
-        setUrlUseCase.execute(url)
+        setUrl(url)
     }
 
     private fun updateGroups(groups: List<Group>) {
@@ -93,10 +89,10 @@ class BookmarkCreateViewModel private constructor(
                 loading = ViewStateLoading(),
                 error = ViewStateError(),
                 data = data.copy(
-                    title = getTitleUseCase.execute(),
-                    url = getUrlUseCase.execute(),
-                    group = getSelectedGroupUseCase.execute(),
-                    expiration = getExpirationDateUseCase.execute(),
+                    label = getLabel(),
+                    url = getUrl(),
+                    group = getSelectedGroup(),
+                    expiresAt = getExpirationDate(),
                     groups = updatedGroups ?: existingGroups
                 )
             )
@@ -137,17 +133,17 @@ class BookmarkCreateViewModel private constructor(
 
     companion object {
         fun create(
-            loadBookmarkUseCase: LoadBookmarkUsecase,
-            getGroupsUseCase: GetGroupsLiveDataUsecase,
-            getSelectedGroupUseCase: GetSelectedGroupUsecase,
-            setSelectedGroupUseCase: SelectGroupUsecase,
-            getTitleUseCase: GetTitleUsecase,
-            setTitleUseCase: SetTitleUsecase,
-            getUrlUseCase: GetUrlUsecase,
-            setUrlUseCase: SetUrlUsecase,
-            getExpirationDateUseCase: GetExpirationDateUsecase,
-            setExpirationDateUseCase: SetExpirationDateUsecase,
-            createBookmarkUseCase: CreateBookmarkUsecase
+            loadBookmarkUseCase: LoadBookmarkUseCase,
+            getGroupsUseCase: GetGroupsLiveDataUseCase,
+            getSelectedGroupUseCase: GetSelectedGroupUseCase,
+            setSelectedGroupUseCase: SelectGroupUseCase,
+            getTitleUseCase: GetLabelUseCase,
+            setTitleUseCase: SetLabelUseCase,
+            getUrlUseCase: GetUrlUseCase,
+            setUrlUseCase: SetUrlUseCase,
+            getExpirationDateUseCase: GetExpirationDateUseCase,
+            setExpirationDateUseCase: SetExpirationDateUseCase,
+            createBookmarkUseCase: CreateBookmarkUseCase
         ): BookmarkCreateViewModel {
             return BookmarkCreateViewModel(
                 loadBookmarkUseCase,
@@ -167,11 +163,11 @@ class BookmarkCreateViewModel private constructor(
 }
 
 data class BookmarkEditData(
-    val title: String? = null,
+    val label: String? = null,
     val url: String? = null,
     val group: Group? = null,
     val groups: List<Group> = emptyList(),
-    val expiration: Date? = null
+    val expiresAt: Date? = null
 )
 
 fun Bookmark?.toEditData(): BookmarkEditData {
@@ -180,18 +176,18 @@ fun Bookmark?.toEditData(): BookmarkEditData {
     }
 
     return BookmarkEditData(
-        title = title,
+        label = label,
         url = site?.url,
         group = group,
-        expiration = expiration
+        expiresAt = expiresAt
     )
 }
 
 fun BookmarkEditData.createBookmark(): Bookmark {
     return Bookmark(
-        title = title,
+        label = label,
         site = url?.let { Website(it) },
-        expiration = expiration,
+        expiresAt = expiresAt,
         group = group
     )
 }

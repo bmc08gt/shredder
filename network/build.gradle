@@ -12,4 +12,6 @@ dependencies {
     implementation deps.retrofit.coroutines
     implementation deps.okhttp3
     implementation deps.okhttp3_logging
+
+    api deps.store
 }

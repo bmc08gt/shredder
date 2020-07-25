@@ -89,14 +89,14 @@ class BookmarkCreateFragment: StateDrivenFragment<BookmarkCreateViewState, Bookm
             viewState.error.hasErrors() -> handleError(viewState.error)
             else -> {
                 val data = viewState.data
-                label.editText?.setText(data.title)
+                label.editText?.setText(data.label)
                 url.editText?.setText(data.url)
                 lifecycleScope.launch {
                     create.viewModel.groups().value.let {
                         updateGroups(it ?: emptyList())
                     }
                 }
-                loadExpiration(data.expiration)
+                loadExpiration(data.expiresAt)
                 label.editText?.doAfterTextChanged { text ->
                     create.viewModel.process(LabelUpdated(text?.toString()))
                 }

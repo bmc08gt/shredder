@@ -1,12 +1,11 @@
 package dev.bmcreations.shredder.features.create.usecases
 
 import androidx.lifecycle.LiveData
-import dev.bmcreations.shredder.core.architecture.SuspendingGetUsecase
 import dev.bmcreations.shredder.features.create.repository.BookmarkCreateRepository
 import dev.bmcreations.shredder.models.Group
 
-class GetGroupsLiveDataUsecase(
+class GetGroupsLiveDataUseCase(
     private val repository: BookmarkCreateRepository
-) : SuspendingGetUsecase<LiveData<List<Group>>>() {
-    override suspend fun execute(): LiveData<List<Group>> = repository.groups()
+)  {
+    suspend operator fun invoke(): LiveData<List<Group>> = repository.groups()
 }

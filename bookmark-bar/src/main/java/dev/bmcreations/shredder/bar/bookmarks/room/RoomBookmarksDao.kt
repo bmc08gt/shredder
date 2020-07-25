@@ -32,8 +32,8 @@ class RoomBookmarksDao(db: BookmarksDatabase) : BookmarksDao, CoroutineScope by 
         return null
     }
 
-    override suspend fun findByTitle(title: String): Bookmark? {
-        return dao.selectByTitle(title)
+    override suspend fun findByLabel(label: String): Bookmark? {
+        return dao.selectByLabel(label)
     }
 
     override suspend fun findByExpiration(date: Date): List<Bookmark> {

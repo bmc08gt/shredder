@@ -19,7 +19,7 @@ interface BookmarksDao {
 
     suspend fun findByUrl(url: String): Bookmark?
 
-    suspend fun findByTitle(title: String): Bookmark?
+    suspend fun findByLabel(label: String): Bookmark?
 
     suspend fun findByExpiration(date: Date): List<Bookmark>
 

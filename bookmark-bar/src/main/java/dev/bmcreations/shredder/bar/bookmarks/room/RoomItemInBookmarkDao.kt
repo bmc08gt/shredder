@@ -16,10 +16,10 @@ interface RoomItemInBookmarkDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun upsert(vararg bookmark: Bookmark)
 
-    @Query("SELECT * FROM bookmarks_table ORDER BY expiration DESC")
+    @Query("SELECT * FROM bookmarks_table ORDER BY expiresAt DESC")
     fun selectAll(): List<Bookmark>
 
-    @Query("SELECT * FROM bookmarks_table ORDER BY expiration DESC")
+    @Query("SELECT * FROM bookmarks_table ORDER BY expiresAt DESC")
     fun observe(): LiveData<List<Bookmark>>
 
     @Query("SELECT * FROM bookmarks_table WHERE id == :id")
@@ -31,13 +31,13 @@ interface RoomItemInBookmarkDao {
 //    @Query("SELECT * FROM bookmarks_table WHERE url == :url")
 //    fun selectByUrl(url: String): Bookmark?
 
-    @Query("SELECT * FROM bookmarks_table WHERE title == :title")
-    fun selectByTitle(title: String): Bookmark?
+    @Query("SELECT * FROM bookmarks_table WHERE label == :label")
+    fun selectByLabel(label: String): Bookmark?
 
-    @Query("SELECT * FROM bookmarks_table WHERE expiration == :expiration")
+    @Query("SELECT * FROM bookmarks_table WHERE expiresAt == :expiration")
     fun selectByExpiration(expiration: Date): List<Bookmark>
 
-    @Query("SELECT * FROM bookmarks_table WHERE expiration BETWEEN :start AND :end")
+    @Query("SELECT * FROM bookmarks_table WHERE expiresAt BETWEEN :start AND :end")
     fun selectByExpiration(start: Date, end: Date): List<Bookmark>
 
     @Query("DELETE FROM bookmarks_table")

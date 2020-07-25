@@ -3,11 +3,8 @@ package dev.bmcreations.shredder.bar.bookmarks
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import dev.bmcreations.shredder.core.extensions.daysBetween
-import dev.bmcreations.shredder.core.extensions.now
-import dev.bmcreations.shredder.core.extensions.plusDays
 import dev.bmcreations.shredder.core.extensions.startOfDay
 import dev.bmcreations.shredder.models.Bookmark
-import dev.bmcreations.shredder.models.Website
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -23,7 +20,7 @@ class InMemoryBookmarksDao : BookmarksDao, CoroutineScope by CoroutineScope(Disp
     private val emitter = MutableLiveData<List<Bookmark>>()
 
     override suspend fun selectAll(): List<Bookmark> {
-        return itemsInBar.values.toList().sortedBy { it.expiration }
+        return itemsInBar.values.toList().sortedBy { it.expiresAt }
     }
 
     override suspend fun selectAllStream(): LiveData<List<Bookmark>> {
@@ -42,16 +39,16 @@ class InMemoryBookmarksDao : BookmarksDao, CoroutineScope by CoroutineScope(Disp
         return itemsInBar.values.find { it.site?.url == url }
     }
 
-    override suspend fun findByTitle(title: String): Bookmark? {
-        return itemsInBar.values.find { it.title == title }
+    override suspend fun findByLabel(label: String): Bookmark? {
+        return itemsInBar.values.find { it.label == label }
     }
 
     override suspend fun findByExpiration(date: Date): List<Bookmark> {
-        return itemsInBar.values.filter { it.expiration?.startOfDay()?.daysBetween(date.startOfDay()) == 0 }
+        return itemsInBar.values.filter { it.expiresAt?.startOfDay()?.daysBetween(date.startOfDay()) == 0 }
     }
 
     override suspend fun findByExpiration(start: Date, end: Date): List<Bookmark> {
-        return itemsInBar.values.filter { it.expiration?.after(start) == true && it.expiration?.before(end) == true }
+        return itemsInBar.values.filter { it.expiresAt?.after(start) == true && it.expiresAt?.before(end) == true }
     }
 
     override suspend fun upsert(vararg bookmark: Bookmark) {

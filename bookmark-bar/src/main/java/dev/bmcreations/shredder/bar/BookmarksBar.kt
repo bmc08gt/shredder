@@ -1,7 +1,6 @@
 package dev.bmcreations.shredder.bar
 
 import androidx.lifecycle.LiveData
-import com.zhuinden.eventemitter.EventSource
 import dev.bmcreations.shredder.bar.bookmarks.BookmarksDao
 import dev.bmcreations.shredder.bar.groups.GroupsDao
 import dev.bmcreations.shredder.models.Bookmark
@@ -49,8 +48,8 @@ class BookmarksBar(
         return bookmarkDao.findByUrl(url)
     }
 
-    suspend fun findByTitle(title: String): Bookmark? {
-        return bookmarkDao.findByTitle(title)
+    suspend fun findByLabel(title: String): Bookmark? {
+        return bookmarkDao.findByLabel(title)
     }
 
     suspend fun findByExpiration(date: Date): List<Bookmark> {

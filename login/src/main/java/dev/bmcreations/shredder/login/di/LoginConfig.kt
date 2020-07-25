@@ -47,7 +47,7 @@ class LoginComponentImpl(
 
     private enum class ImplType { LIVE, FAKED }
 
-    private val implementation = ImplType.LIVE
+    private val implementation = ImplType.FAKED
 
     private val repository: LoginViewRepository = when (implementation) {
         ImplType.LIVE -> LoginRepositoryImpl(core.prefs, network.login, network.user)

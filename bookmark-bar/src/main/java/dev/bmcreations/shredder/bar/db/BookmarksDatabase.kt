@@ -26,9 +26,9 @@ abstract class BookmarksDatabase: RoomDatabase() {
                     // fallback to destructive migration on downgrades
                     // e.g when DB change is up in a PR and you awaiting review
                     // while working on other tasks
-//                    if (BuildConfig.DEBUG) {
-//                        fallbackToDestructiveMigrationOnDowngrade()
-//                    }
+                    if (BuildConfig.DEBUG) {
+                        fallbackToDestructiveMigrationOnDowngrade()
+                    }
                 }.build()
             }
         }

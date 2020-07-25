@@ -28,10 +28,10 @@ class BookmarkCreateRepositoryImpl(
 
     override fun selectedGroup(): Group? = editData.group
 
-    override fun getTitle(): String? = editData.title
+    override fun getLabel(): String? = editData.label
 
-    override fun setTitle(title: String?) {
-        editData = editData.copy(title = title)
+    override fun setLabel(title: String?) {
+        editData = editData.copy(label = title)
     }
 
     override fun getUrl(): String? = editData.url
@@ -40,10 +40,10 @@ class BookmarkCreateRepositoryImpl(
         editData = editData.copy(url = url)
     }
 
-    override fun getExpirationDate(): Date? = editData.expiration
+    override fun getExpirationDate(): Date? = editData.expiresAt
 
     override fun setExpirationDate(date: Date?) {
-        editData = editData.copy(expiration = date)
+        editData = editData.copy(expiresAt = date)
     }
 
     override fun createBookmark(cb: (Bookmark?) -> Unit) {
