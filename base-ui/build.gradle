@@ -12,5 +12,13 @@ dependencies {
     implementation deps.jetpack.fragment_ktx
     implementation deps.jetpack.material
 
+    // compose
+    implementation deps.jetpack.compose.runtime
+    implementation deps.jetpack.compose.ui
+    implementation deps.jetpack.compose.material
+    implementation deps.jetpack.compose.materialIcons
+    implementation deps.jetpack.compose.foundation
+    implementation deps.jetpack.compose.animation
+
     api deps.lottie
 }
