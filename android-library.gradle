@@ -1,5 +1,7 @@
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
+apply plugin: 'kotlin-android-extensions'
+
 
 apply from: "$rootProject.projectDir/shared-dependencies.gradle"
 
@@ -14,6 +16,10 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+    }
+
+    androidExtensions {
+        experimental = true
     }
 
     buildTypes {

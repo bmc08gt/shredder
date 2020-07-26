@@ -1,4 +1,4 @@
-package dev.bmcreations.shredder.extensions
+package dev.bmcreations.shredder.ui.extensions
 
 import android.os.Bundle
 import androidx.compose.MutableState

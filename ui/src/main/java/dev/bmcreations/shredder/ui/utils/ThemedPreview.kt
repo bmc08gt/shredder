@@ -5,7 +5,7 @@ import androidx.ui.material.Surface
 import dev.bmcreations.shredder.ui.theme.ShredderTheme
 
 @Composable
-internal fun ThemedPreview(
+fun ThemedPreview(
     darkTheme: Boolean = false,
     children: @Composable() () -> Unit
 ) {

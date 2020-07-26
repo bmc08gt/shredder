@@ -1,4 +1,4 @@
-package dev.bmcreations.shredder.ui.home
+package dev.bmcreations.shredder.home
 
 import androidx.compose.Composable
 import androidx.compose.MutableState
@@ -6,7 +6,6 @@ import androidx.compose.remember
 import androidx.compose.state
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.*
-import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.foundation.shape.corner.CircleShape
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.layout.*
@@ -15,14 +14,14 @@ import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Add
 import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
-import dev.bmcreations.shredder.ui.edit.EditDialog
 import dev.bmcreations.shredder.ui.navigation.Screen
+import dev.bmcreations.shredder.home.edit.EditDialog
 import dev.bmcreations.shredder.ui.utils.ThemedPreview
 
 @Composable
 fun HomeScreen(
-        navigateTo: (Screen) -> Unit,
-        scaffoldState: ScaffoldState = remember { ScaffoldState() }
+    navigateTo: (Screen) -> Unit,
+    scaffoldState: ScaffoldState = remember { ScaffoldState() }
 ) {
     val state = state { BottomDrawerState.Closed }
     val onStateChange = state.component2()

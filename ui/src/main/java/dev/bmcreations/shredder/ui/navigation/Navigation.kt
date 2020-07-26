@@ -7,7 +7,7 @@ import androidx.compose.setValue
 import androidx.core.os.bundleOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import dev.bmcreations.shredder.extensions.getMutableStateOf
+import dev.bmcreations.shredder.ui.extensions.getMutableStateOf
 import dev.bmcreations.shredder.ui.navigation.Screen.*
 import dev.bmcreations.shredder.ui.navigation.ScreenName.*
 

@@ -5,7 +5,7 @@ import androidx.ui.animation.Crossfade
 import androidx.ui.material.MaterialTheme
 import androidx.ui.material.Surface
 import dev.bmcreations.shredder.core.AppComponent
-import dev.bmcreations.shredder.ui.home.HomeScreen
+import dev.bmcreations.shredder.home.HomeScreen
 import dev.bmcreations.shredder.ui.navigation.NavigationViewModel
 import dev.bmcreations.shredder.ui.navigation.Screen
 import dev.bmcreations.shredder.ui.theme.ShredderTheme
