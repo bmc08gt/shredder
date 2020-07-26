@@ -4,8 +4,7 @@ import androidx.compose.Composable
 import androidx.ui.animation.Crossfade
 import androidx.ui.material.MaterialTheme
 import androidx.ui.material.Surface
-import dev.bmcreations.shredder.di.AppContainer
-import dev.bmcreations.shredder.ui.edit.EditDialog
+import dev.bmcreations.shredder.core.AppComponent
 import dev.bmcreations.shredder.ui.home.HomeScreen
 import dev.bmcreations.shredder.ui.navigation.NavigationViewModel
 import dev.bmcreations.shredder.ui.navigation.Screen
@@ -13,7 +12,7 @@ import dev.bmcreations.shredder.ui.theme.ShredderTheme
 
 @Composable
 fun ShredderApp(
-        appContainer: AppContainer,
+        appComponent: AppComponent,
         navigationViewModel: NavigationViewModel
 ) {
     ShredderTheme {
