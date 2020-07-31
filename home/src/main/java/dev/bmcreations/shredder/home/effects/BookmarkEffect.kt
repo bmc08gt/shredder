@@ -4,7 +4,6 @@ import androidx.compose.*
 import dev.bmcreations.shredder.home.EditCall
 import dev.bmcreations.shredder.models.Bookmark
 import dev.bmcreations.shredder.ui.state.UiState
-import kotlin.reflect.KFunction2
 
 @Composable
 fun fetchBookmark(bookmarkId: String?, editCall: EditCall): UiState<Bookmark> {

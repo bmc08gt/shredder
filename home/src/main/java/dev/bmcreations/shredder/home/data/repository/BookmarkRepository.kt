@@ -7,4 +7,5 @@ interface BookmarkRepository {
     fun loadBookmarks(): Flow<List<Bookmark>>
     fun loadBookmark(bookmarkId: String?, callback: (Result<Bookmark>) -> Unit)
     fun upsertBookmark(upsert: Bookmark): Boolean
+    fun removeBookmark(removal: Bookmark): Boolean
 }

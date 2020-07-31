@@ -7,11 +7,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.channelFlow
-import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.launch
 
-class FakeBookmarkRepositoryImpl : BookmarkRepository, CoroutineScope by CoroutineScope(Dispatchers.Main) {
+class FakeBookmarkRepositoryImpl : BookmarkRepository,
+                                   CoroutineScope by CoroutineScope(Dispatchers.Main) {
 
     private var initialList = mutableListOf(
         Bookmark(site = Website("https://planoly.com"), label = "Planoly"),
@@ -22,30 +21,40 @@ class FakeBookmarkRepositoryImpl : BookmarkRepository, CoroutineScope by Corouti
 
     private var bookmarks = mutableMapOf<String, Bookmark>()
 
-    private val channel  = ConflatedBroadcastChannel<List<Bookmark>>()
+    private val channel = ConflatedBroadcastChannel<List<Bookmark>>()
 
     init {
         initialList.forEach {
             bookmarks[it.id] = it
         }
-        channel.offer(bookmarks.values.toList())
+        dispatchChange()
     }
 
     override fun loadBookmarks(): Flow<List<Bookmark>> = channel.asFlow()
 
     override fun loadBookmark(bookmarkId: String?, callback: (Result<Bookmark>) -> Unit) {
         val result = bookmarks[bookmarkId]
-        callback(when {
-            result != null -> Result.success(result)
-            else -> Result.failure(Throwable("No bookmark found for ID"))
-        })
+        callback(
+            when {
+                result != null -> Result.success(result)
+                else -> Result.failure(Throwable("No bookmark found for ID"))
+            }
+        )
     }
 
     override fun upsertBookmark(upsert: Bookmark): Boolean {
         bookmarks[upsert.id] = upsert
-
-        launch(Dispatchers.Main) { channel.send(bookmarks.values.toList()) }
-
+        dispatchChange()
         return bookmarks.containsKey(upsert.id)
+    }
+
+    override fun removeBookmark(removal: Bookmark): Boolean {
+        val removed = bookmarks.remove(removal.id) != null
+        dispatchChange()
+        return removed
+    }
+
+    private fun dispatchChange() {
+        launch(Dispatchers.Main) { channel.send(bookmarks.values.toList()) }
     }
 }
