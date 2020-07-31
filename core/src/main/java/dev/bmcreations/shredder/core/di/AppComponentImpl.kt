@@ -1,7 +1,7 @@
-package dev.bmcreations.shredder.core
+package dev.bmcreations.shredder.core.di
 
-import android.app.Application
 import android.content.Context
+
 
 /**
  * Dependency Injection container at the application level.

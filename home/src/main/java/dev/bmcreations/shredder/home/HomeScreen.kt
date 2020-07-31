@@ -1,69 +1,119 @@
 package dev.bmcreations.shredder.home
 
-import androidx.compose.Composable
-import androidx.compose.MutableState
-import androidx.compose.remember
-import androidx.compose.state
+import androidx.compose.*
 import androidx.ui.core.Modifier
-import androidx.ui.foundation.*
+import androidx.ui.foundation.Icon
+import androidx.ui.foundation.Text
 import androidx.ui.foundation.shape.corner.CircleShape
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
-import androidx.ui.layout.*
+import androidx.ui.layout.padding
 import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Add
-import androidx.ui.tooling.preview.Preview
 import androidx.ui.unit.dp
+import dev.bmcreations.shredder.home.ui.edit.*
+import dev.bmcreations.shredder.home.ui.list.BookmarkList
+import dev.bmcreations.shredder.models.Bookmark
 import dev.bmcreations.shredder.ui.navigation.Screen
-import dev.bmcreations.shredder.home.edit.EditDialog
-import dev.bmcreations.shredder.ui.utils.ThemedPreview
+import kotlin.reflect.KFunction1
+import kotlin.reflect.KFunction2
+
+typealias EditCall = KFunction2<String?, (Result<Bookmark>) -> Unit, Unit>
+typealias UpsertBookmark = KFunction1<Bookmark, Unit>
 
 @Composable
 fun HomeScreen(
-    navigateTo: (Screen) -> Unit,
-    scaffoldState: ScaffoldState = remember { ScaffoldState() }
+        navigateTo: (Screen) -> Unit,
+        onEdit: EditCall,
+        bookmarks: List<Bookmark> = remember { emptyList() },
+        scaffoldState: ScaffoldState = remember { ScaffoldState() },
+        upsert: UpsertBookmark
 ) {
-    val state = state { BottomDrawerState.Closed }
-    val onStateChange = state.component2()
+    val sheet = remember { mutableStateOf(BottomDrawerState.Closed) }
+    val (sheetState, onStateChange) = sheet
+    val editState = remember<MutableState<EditRequest>> { mutableStateOf(EditRequest.Nothing) }
+
+    if (sheet.value == BottomDrawerState.Closed) {
+        editState.value = EditRequest.Nothing
+    }
+
+    DynamicGesturesBottomSheet(
+            sheetState,
+            onStateChange,
+            gesturesEnabled = sheetState != BottomDrawerState.Closed,
+            drawerContent = {
+                EditDialog(
+                        request = editState.value,
+                        onLoad = {
+                            if (sheet.value == BottomDrawerState.Closed) {
+                                sheet.value = BottomDrawerState.Opened
+                            }
+                        },
+                        save = {
+                            sheet.value = BottomDrawerState.Closed
+                            upsert(it)
+                        }
+                )
+            },
+            bodyContent = {
+                BodyContent(
+                        scaffoldState,
+                        bookmarks,
+                        edit = { editState.value = EditRequest.Edit(it, onEdit) },
+                        add = { editState.value = EditRequest.New }
+                )
+            }
+    )
+}
+
+@Composable
+private fun DynamicGesturesBottomSheet(
+        drawerState: BottomDrawerState,
+        onStateChange: (BottomDrawerState) -> Unit,
+        gesturesEnabled: Boolean,
+        drawerContent: @Composable () -> Unit,
+        bodyContent: @Composable () -> Unit) {
     BottomDrawerLayout(
-            drawerState = state.component1(),
-            onStateChange = state.component2(),
+            drawerState = drawerState,
+            onStateChange = onStateChange,
             drawerShape = RoundedCornerShape(topLeft = 32.dp, topRight = 32.dp),
-            gesturesEnabled = true,
-            drawerContent = { EditDialog(scaffoldState) },
-            bodyContent = { BodyContent(scaffoldState, state) }
+            gesturesEnabled = gesturesEnabled,
+            drawerContent = drawerContent,
+            bodyContent = bodyContent
     )
 }
 
 @Composable
-private fun TopBar(scaffoldState: ScaffoldState) {
-    TopAppBar(
-            title = { Text(text = "shredder") },
-            backgroundColor = MaterialTheme.colors.secondary,
-            contentColor = MaterialTheme.colors.onSecondary
-    )
-}
-
-@Composable
-private fun BodyContent(scaffoldState: ScaffoldState, state: MutableState<BottomDrawerState>) {
+private fun BodyContent(
+        scaffoldState: ScaffoldState,
+        bookmarks: List<Bookmark>,
+        edit: (Bookmark) -> Unit,
+        add: () -> Unit
+) {
     Scaffold(
             scaffoldState = scaffoldState,
-            topBar = { TopBar(scaffoldState) },
-            bodyContent = { innerPadding -> Content(scaffoldState, Modifier.padding(innerPadding)) },
-            bottomBar = { BottomBar(scaffoldState) },
+            topBar = { TopBar() },
+            bodyContent = { innerPadding ->
+                BookmarkList(Modifier.padding(innerPadding), bookmarks, edit)
+            },
+            bottomBar = { BottomBar() },
             isFloatingActionButtonDocked = true,
             floatingActionButtonPosition = Scaffold.FabPosition.Center,
-            floatingActionButton = { Fab { state.value = BottomDrawerState.Opened } }
+            floatingActionButton = { Fab { add() } }
     )
 }
 
 @Composable
-private fun Content(scaffoldState: ScaffoldState, padding: Modifier) {
-
+private fun TopBar() {
+    TopAppBar(
+        title = { Text(text = "shredder") },
+        backgroundColor = MaterialTheme.colors.secondary,
+        contentColor = MaterialTheme.colors.onSecondary
+    )
 }
 
 @Composable
-private fun BottomBar(scaffoldState: ScaffoldState) {
+private fun BottomBar() {
     BottomAppBar(
             cutoutShape = CircleShape,
             backgroundColor = MaterialTheme.colors.surface,
@@ -79,15 +129,5 @@ private fun Fab(onClick: () -> Unit) {
             shape = CircleShape,
     ) {
         Icon(Icons.Filled.Add, tint = MaterialTheme.colors.onSecondary)
-    }
-}
-
-@Preview("Home screen body")
-@Composable
-fun PreviewHomeScreenBody() {
-    ThemedPreview {
-        HomeScreen(
-                navigateTo = {}
-        )
     }
 }

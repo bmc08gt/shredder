@@ -1,4 +1,4 @@
-package dev.bmcreations.shredder.core
+package dev.bmcreations.shredder.core.di
 
 import androidx.annotation.MainThread
 import java.lang.RuntimeException
@@ -17,11 +17,13 @@ class ComponentLazy<C : Component> (
 
     override val value: C
         get() {
-            val match = ComponentRouter.components.values.find {
-                it as? C != null
-            } ?: throw ComponentNotRegisteredException(componentClass::simpleName)
+            val match = ComponentRouter.components.values.find { it.javaClass.interfaces.contains(componentClass.java) }
 
-            return match as C
+            requireNotNull(match) {
+                ComponentNotRegisteredException(componentClass::simpleName)
+            }
+
+            return (match as C).also { cached = it }
         }
 
     override fun isInitialized() = cached != null

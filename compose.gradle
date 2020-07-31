@@ -16,4 +16,5 @@ dependencies {
     implementation "androidx.compose.material:material-icons-extended:$compose_version"
     implementation "androidx.compose.foundation:foundation:$compose_version"
     implementation "androidx.compose.animation:animation:$compose_version"
+    implementation "dev.chrisbanes.accompanist:accompanist-coil:0.1.7"
 }

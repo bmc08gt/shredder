@@ -7,8 +7,8 @@ import java.util.*
 @Parcelize
 data class Bookmark(
     val id: String = UUID.randomUUID().toString(),
-    val site: Website?,
-    val label: String?,
+    val site: Website,
+    val label: String,
     val expiresAt: Date? = null,
     val group: Group? = null,
     val createdAt: Date? = Date()

@@ -8,15 +8,13 @@ import androidx.ui.material.lightColorPalette
 
 
 private val DarkColorPalette = darkColorPalette(
-    primary = colorPrimary,
-    secondary = colorSecondary,
-    onSurface = colorOnSurface,
+        primary = colorPrimary,
+        secondary = colorSecondary,
 )
 
 private val LightColorPalette = lightColorPalette(
-    primary = colorPrimary,
-    secondary = colorSecondary,
-    onSurface = colorOnSurface
+        primary = colorPrimary,
+        secondary = colorSecondary,
 
         /* Other default colors to override
     background = Color.White,

@@ -2,8 +2,8 @@
 buildscript {
     ext {
         compose_version = '0.1.0-dev15'
+        kotlin_version = "1.4.0-rc"
     }
-    ext.kotlin_version = "1.4-M3"
     repositories {
         google()
         jcenter()

@@ -1,6 +1,12 @@
 apply from: "$rootProject.projectDir/android-library.gradle"
 apply from: "$rootProject.projectDir/compose.gradle"
 
+dependencies {
+    implementation project(':ui')
+    implementation project(":core")
+    implementation project(":models")
+}
+
 tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
     kotlinOptions {
         jvmTarget = "1.8"
@@ -8,7 +14,3 @@ tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
     }
 }
 
-dependencies {
-    implementation project(':ui')
-    implementation project(":core")
-}
