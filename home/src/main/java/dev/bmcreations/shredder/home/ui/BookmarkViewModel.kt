@@ -1,9 +1,7 @@
 package dev.bmcreations.shredder.home.ui
 
-import androidx.annotation.MainThread
-import androidx.compose.Composable
-import androidx.compose.collectAsState
 import androidx.lifecycle.ViewModel
+import dev.bmcreations.shredder.home.data.usecases.DeleteBookmark
 import dev.bmcreations.shredder.home.data.usecases.GetBookmarks
 import dev.bmcreations.shredder.home.data.usecases.LoadBookmark
 import dev.bmcreations.shredder.home.data.usecases.UpsertBookmark
@@ -13,7 +11,8 @@ class BookmarkViewModel private constructor(
     private val loadById: LoadBookmark,
     private val getBookmarks: GetBookmarks,
     private val upsertBookmark: UpsertBookmark,
-): ViewModel() {
+    private val deleteBookmark: DeleteBookmark
+) : ViewModel() {
 
     fun loadAll() = getBookmarks()
 
@@ -21,16 +20,22 @@ class BookmarkViewModel private constructor(
         loadById(id, callback)
     }
 
-    fun upsert(upsert: Bookmark) {
-        upsertBookmark(upsert)
+    fun upsert(upsert: Bookmark): Boolean {
+        return upsertBookmark(upsert)
+    }
+
+    fun remove(removal: Bookmark): Boolean {
+        return deleteBookmark(removal)
     }
 
     companion object {
         fun create(
             loadBookmark: LoadBookmark,
             getBookmarks: GetBookmarks,
-            upsertBookmark: UpsertBookmark
-        ): BookmarkViewModel = BookmarkViewModel(loadBookmark, getBookmarks, upsertBookmark)
+            upsertBookmark: UpsertBookmark,
+            deleteBookmark: DeleteBookmark
+        ): BookmarkViewModel =
+            BookmarkViewModel(loadBookmark, getBookmarks, upsertBookmark, deleteBookmark)
     }
 }
 

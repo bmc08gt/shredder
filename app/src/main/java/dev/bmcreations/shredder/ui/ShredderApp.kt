@@ -36,12 +36,15 @@ private fun AppContent(
         when (val screen = navigationViewModel.currentScreen) {
             Screen.Home -> {
                 Crossfade(screen) {
-                    val bookmarks = bookmarkViewModel.loadAll().collectAsState(initial = emptyList())
+                    val bookmarks =
+                        bookmarkViewModel.loadAll().collectAsState(initial = emptyList())
                     HomeScreen(
-                            navigateTo = navigationViewModel::navigateTo,
-                            bookmarks = bookmarks.value,
-                            onEdit = bookmarkViewModel::loadBookmark,
-                            upsert = bookmarkViewModel::upsert
+                        navigateTo = navigationViewModel::navigateTo,
+                        bookmarks = bookmarks.value,
+                        onEdit = bookmarkViewModel::loadBookmark,
+                        upsert = bookmarkViewModel::upsert,
+                        delete = bookmarkViewModel::remove
+
                     )
                 }
             }
