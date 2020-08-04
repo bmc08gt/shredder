@@ -2,19 +2,22 @@ package dev.bmcreations.shredder.ui.theme
 
 import androidx.compose.Composable
 import androidx.ui.foundation.isSystemInDarkTheme
+import androidx.ui.graphics.Color
 import androidx.ui.material.MaterialTheme
 import androidx.ui.material.darkColorPalette
 import androidx.ui.material.lightColorPalette
 
 
 private val DarkColorPalette = darkColorPalette(
-        primary = colorPrimary,
-        secondary = colorSecondary,
+    primary = colorPrimary,
+    secondary = colorSecondary,
+    background = Color(0xFF060D13),
+    surface = Color(0xFF2D2D2D)
 )
 
 private val LightColorPalette = lightColorPalette(
-        primary = colorPrimary,
-        secondary = colorSecondary,
+    primary = colorPrimary,
+    secondary = colorSecondary,
 
         /* Other default colors to override
     background = Color.White,
@@ -35,9 +38,9 @@ fun ShredderTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composab
     }
 
     MaterialTheme(
-            colors = colors,
-            typography = typography,
-            shapes = shapes,
-            content = content
+        colors = colors,
+        typography = typography,
+        shapes = shapes,
+        content = content
     )
 }

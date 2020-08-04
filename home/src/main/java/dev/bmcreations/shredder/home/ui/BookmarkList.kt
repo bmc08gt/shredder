@@ -1,15 +1,13 @@
-package dev.bmcreations.shredder.home.ui.list
+package dev.bmcreations.shredder.home.ui
 
-import android.os.Vibrator
 import androidx.compose.Composable
 import androidx.ui.core.ContextAmbient
+import androidx.ui.core.LayoutDirection
 import androidx.ui.core.Modifier
 import androidx.ui.core.WithConstraints
-import androidx.ui.foundation.ScrollableColumn
 import androidx.ui.foundation.Text
 import androidx.ui.foundation.lazy.LazyColumnItems
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
-import androidx.ui.layout.height
 import androidx.ui.layout.padding
 import androidx.ui.material.Card
 import androidx.ui.material.ListItem
@@ -22,15 +20,13 @@ import dev.chrisbanes.accompanist.coil.CoilImage
 
 @Composable
 internal fun BookmarkList(
-    padding: Modifier,
+    modifier: Modifier = Modifier,
     bookmarks: List<Bookmark>,
-    edit: (Bookmark) -> Unit,
-    delete: (Bookmark) -> Unit
+    onEdit: Bookmark.() -> Unit,
+    onDelete: Bookmark.() -> Unit
 ) {
-    ScrollableColumn(modifier = padding) {
-        LazyColumnItems(bookmarks) { bookmark ->
-            BookmarkCard(bookmark = bookmark, onClick = edit, onSwipe = delete)
-        }
+    LazyColumnItems(modifier = modifier, items = bookmarks) { bookmark ->
+        BookmarkCard(bookmark = bookmark, onClick = onEdit, onDelete)
     }
 }
 
@@ -38,13 +34,15 @@ internal fun BookmarkList(
 private fun BookmarkCard(
     bookmark: Bookmark,
     onClick: (Bookmark) -> Unit,
-    onSwipe: (Bookmark) -> Unit
+    onDelete: Bookmark.() -> Unit
 ) {
     WithConstraints {
         Card(
-            modifier = Modifier.height(100.dp) +
-                Modifier.padding(16.dp) +
-                Modifier.swipeToDelete(constraints) { onSwipe(bookmark) },
+            modifier =
+            Modifier.swipeToDelete(
+                constraints = constraints,
+                swipeDirection = LayoutDirection.Ltr
+            ) { onDelete(bookmark) } + Modifier.padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
             elevation = 10.dp,
             shape = RoundedCornerShape(9.dp)
         ) {

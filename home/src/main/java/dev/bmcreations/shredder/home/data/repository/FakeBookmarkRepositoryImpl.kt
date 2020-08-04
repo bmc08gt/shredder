@@ -2,12 +2,13 @@ package dev.bmcreations.shredder.home.data.repository
 
 import dev.bmcreations.shredder.models.Bookmark
 import dev.bmcreations.shredder.models.Website
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.launch
+import java.util.*
 
 class FakeBookmarkRepositoryImpl : BookmarkRepository,
                                    CoroutineScope by CoroutineScope(Dispatchers.Main) {
@@ -19,18 +20,23 @@ class FakeBookmarkRepositoryImpl : BookmarkRepository,
         Bookmark(site = Website("https://slack.com"), label = "Slack")
     )
 
-    private var bookmarks = mutableMapOf<String, Bookmark>()
-
-    private val channel = ConflatedBroadcastChannel<List<Bookmark>>()
-
     init {
-        initialList.forEach {
-            bookmarks[it.id] = it
+        launch {
+            withContext(Dispatchers.IO) {
+                for (i in 0..12) {
+                    delay(100)
+                    val bookmark = Bookmark(label = "test$i", site = Website(url = "reddit.com"))
+                    upsertBookmark(bookmark)
+                }
+            }
         }
-        dispatchChange()
     }
 
-    override fun loadBookmarks(): Flow<List<Bookmark>> = channel.asFlow()
+    private var bookmarks = mutableMapOf<String, Bookmark>()
+
+    private val channel = MutableStateFlow<List<Bookmark>>(emptyList())
+
+    override fun loadBookmarks(): List<Bookmark> = channel.value
 
     override fun loadBookmark(bookmarkId: String?, callback: (Result<Bookmark>) -> Unit) {
         val result = bookmarks[bookmarkId]
@@ -55,6 +61,6 @@ class FakeBookmarkRepositoryImpl : BookmarkRepository,
     }
 
     private fun dispatchChange() {
-        launch(Dispatchers.Main) { channel.send(bookmarks.values.toList()) }
+        channel.value = (bookmarks.values.toList())
     }
 }

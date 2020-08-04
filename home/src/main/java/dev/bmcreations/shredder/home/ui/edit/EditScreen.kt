@@ -1,9 +1,6 @@
 package dev.bmcreations.shredder.home.ui.edit
 
-import androidx.compose.Composable
-import androidx.compose.mutableStateOf
-import androidx.compose.remember
-import androidx.compose.state
+import androidx.compose.*
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.Box
 import androidx.ui.foundation.Icon
@@ -11,43 +8,46 @@ import androidx.ui.foundation.Text
 import androidx.ui.foundation.shape.corner.RoundedCornerShape
 import androidx.ui.input.TextFieldValue
 import androidx.ui.layout.*
-import androidx.ui.material.ExtendedFloatingActionButton
-import androidx.ui.material.MaterialTheme
-import androidx.ui.material.OutlinedTextField
-import androidx.ui.material.Surface
+import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Save
 import androidx.ui.text.TextStyle
 import androidx.ui.text.font.FontFamily
 import androidx.ui.unit.dp
 import androidx.ui.unit.sp
-import dev.bmcreations.shredder.home.EditCall
-import dev.bmcreations.shredder.home.UpsertBookmark
+import dev.bmcreations.shredder.home.data.models.EditModel
+import dev.bmcreations.shredder.home.data.models.asBookmark
+import dev.bmcreations.shredder.home.data.models.edit
+import dev.bmcreations.shredder.home.ui.DeleteBookmark
+import dev.bmcreations.shredder.home.ui.LoadById
+import dev.bmcreations.shredder.home.ui.UpdateBookmark
 import dev.bmcreations.shredder.home.effects.fetchBookmark
 import dev.bmcreations.shredder.models.Bookmark
 import dev.bmcreations.shredder.ui.state.UiState
 
 sealed class EditRequest {
     object New : EditRequest()
-    data class Edit(val bookmark: Bookmark, val requestCall: EditCall) : EditRequest()
+    data class Edit(val bookmark: Bookmark, val requestCall: LoadById) : EditRequest()
+    data class Delete(val bookmark: Bookmark, val deleteCall: DeleteBookmark): EditRequest()
+    data class UndoDelete(val bookmark: Bookmark, val upsertCall: UpdateBookmark): EditRequest()
     object Nothing : EditRequest()
 }
 
 @OptIn(ExperimentalLayout::class)
 @Composable
 fun EditDialog(
-        request: EditRequest,
-        onLoad: () -> Unit,
-        save: (Bookmark) -> Unit
+    request: MutableState<EditRequest>,
+    sheetState: MutableState<BottomDrawerState>,
+    save: (Bookmark) -> Unit
 ) {
-    when (request) {
-        EditRequest.New -> EditDialog(EditModel(label = "", url = ""), onLoad, save)
+    when (val edit = request.value) {
+        EditRequest.New -> EditDialog(EditModel(label = "", url = ""), sheetState, save)
         is EditRequest.Edit -> {
-            val bookmarkState = with(request) { fetchBookmark(bookmark.id, requestCall) }
+            val bookmarkState = with(edit) { fetchBookmark(bookmark.id, requestCall) }
             if (bookmarkState is UiState.Success<Bookmark>) {
-                EditDialog(bookmarkState.data.edit(), onLoad, save)
+                EditDialog(bookmarkState.data.edit(), sheetState, save)
             } else if (bookmarkState is UiState.Error) {
-                EditDialog(EditModel(label = "", url = ""), onLoad, save)
+                EditDialog(EditModel(label = "", url = ""), sheetState, save)
             }
         }
         EditRequest.Nothing -> { }
@@ -56,9 +56,9 @@ fun EditDialog(
 
 @Composable
 private fun EditDialog(
-        bookmark: EditModel,
-        onLoad: () -> Unit,
-        save: (Bookmark) -> Unit
+    bookmark: EditModel,
+    sheetState: MutableState<BottomDrawerState>,
+    save: (Bookmark) -> Unit
 ) {
     val inFlight = remember { mutableStateOf(EditModel(label = "", url = "").let { bookmark }) }
 
@@ -124,7 +124,9 @@ private fun EditDialog(
             }
         }
     }
-    onLoad()
+    if (sheetState.value == BottomDrawerState.Closed) {
+        sheetState.value = BottomDrawerState.Opened
+    }
 }
 
 @Composable

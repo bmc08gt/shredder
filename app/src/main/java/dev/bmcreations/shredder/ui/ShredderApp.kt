@@ -6,7 +6,7 @@ import androidx.ui.animation.Crossfade
 import androidx.ui.material.MaterialTheme
 import androidx.ui.material.Surface
 import dev.bmcreations.shredder.core.di.AppComponent
-import dev.bmcreations.shredder.home.HomeScreen
+import dev.bmcreations.shredder.home.ui.HomeScreen
 import dev.bmcreations.shredder.home.di.HomeComponent
 import dev.bmcreations.shredder.home.ui.BookmarkViewModel
 import dev.bmcreations.shredder.ui.navigation.NavigationViewModel
@@ -41,7 +41,7 @@ private fun AppContent(
                     HomeScreen(
                         navigateTo = navigationViewModel::navigateTo,
                         bookmarks = bookmarks.value,
-                        onEdit = bookmarkViewModel::loadBookmark,
+                        loadBookmark = bookmarkViewModel::loadBookmark,
                         upsert = bookmarkViewModel::upsert,
                         delete = bookmarkViewModel::remove
 
