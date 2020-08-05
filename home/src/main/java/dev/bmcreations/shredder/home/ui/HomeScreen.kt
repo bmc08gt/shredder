@@ -40,7 +40,7 @@ fun HomeScreen(
         sheetState.value,
         onStateChange = {
             // Reset our edit state explicitly when the sheet is closed
-            if (sheetState.value == BottomDrawerState.Closed) {
+            if (it == BottomDrawerState.Closed) {
                 editState.value = EditRequest.Nothing
             }
         },

@@ -44,8 +44,7 @@ internal fun BodyContent(
                 )
 
                 TransientSnackbar(
-                    modifier = Modifier.gravity(Alignment.BottomCenter) + Modifier.padding(bottom = 72.dp),
-                    shape = MaterialTheme.shapes.medium,
+                    modifier = Modifier.gravity(Alignment.BottomCenter) + Modifier.padding(bottom = 72.dp, start = 16.dp, end = 16.dp),
                     snackbarState = snackbarState,
                     text = "Bookmark deleted.",
                     actionLabel = "Undo",
@@ -58,7 +57,7 @@ internal fun BodyContent(
                             editState.value = EditRequest.UndoDelete(it, undo)
                         }
                     },
-                    onDismiss = {  }
+                    onDismiss = { editState.value = EditRequest.Nothing }
                 )
             }
         },
