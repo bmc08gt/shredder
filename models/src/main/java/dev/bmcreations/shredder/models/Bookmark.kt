@@ -11,5 +11,5 @@ data class Bookmark(
     val label: String,
     val expiresAt: Date? = null,
     val group: Group? = null,
-    val createdAt: Date? = Date()
+    val createdAt: Date = Date()
 ) : Parcelable

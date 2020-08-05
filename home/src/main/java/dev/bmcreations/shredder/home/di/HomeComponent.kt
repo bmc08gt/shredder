@@ -1,28 +1,37 @@
 package dev.bmcreations.shredder.home.di
 
+import dev.bmcreations.shredder.bookmarks.Library
+import dev.bmcreations.shredder.bookmarks.dao.InMemoryBookmarksDao
+import dev.bmcreations.shredder.bookmarks.usecases.*
 import dev.bmcreations.shredder.core.di.AppComponent
 import dev.bmcreations.shredder.core.di.Component
-import dev.bmcreations.shredder.home.data.repository.FakeBookmarkRepositoryImpl
-import dev.bmcreations.shredder.home.data.usecases.DeleteBookmark
-import dev.bmcreations.shredder.home.data.usecases.GetBookmarks
-import dev.bmcreations.shredder.home.data.usecases.LoadBookmark
-import dev.bmcreations.shredder.home.data.usecases.UpsertBookmark
-import dev.bmcreations.shredder.home.ui.BookmarkViewModel
 
 /**
  * Dependency Injection container at the application level.
  */
 interface HomeComponent : Component {
-    val bookmarkViewModel: BookmarkViewModel
+    val bookmarkLibrary: Library
 }
 
 class HomeComponentImpl(appComponent: AppComponent) : HomeComponent {
-    private val repository = FakeBookmarkRepositoryImpl()
+    companion object {
+        enum class IMPLEMENTATION  { InMemory }
+    }
 
-    override val bookmarkViewModel: BookmarkViewModel = BookmarkViewModel.create(
-            loadBookmark = LoadBookmark(repository),
-            getBookmarks = GetBookmarks(repository),
-            upsertBookmark = UpsertBookmark(repository),
-            deleteBookmark = DeleteBookmark(repository)
+    private val implementation = IMPLEMENTATION.InMemory
+
+
+    private val daoImpl = when (implementation) {
+        IMPLEMENTATION.InMemory -> InMemoryBookmarksDao()
+    }
+
+    override val bookmarkLibrary: Library = Library(
+        getBookmarks = GetBookmarks(daoImpl),
+        getBookmarkById = GetBookmarkById(daoImpl),
+        getBookmarkByLabel = GetBookmarkByLabel(daoImpl),
+        getBookmarkByUrl = GetBookmarkByUrl(daoImpl),
+        upsertBookmark = UpsertBookmark(daoImpl),
+        deleteBookmark = DeleteBookmark(daoImpl),
+        clearBookmarks = ClearBookmarks(daoImpl)
     )
 }

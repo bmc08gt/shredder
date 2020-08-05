@@ -36,6 +36,7 @@ android {
 }
 
 dependencies {
+    implementation project(':bookmarks')
     implementation project(":core")
     implementation project(':home')
     implementation project(':models')

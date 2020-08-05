@@ -18,20 +18,10 @@ import androidx.ui.unit.sp
 import dev.bmcreations.shredder.home.data.models.EditModel
 import dev.bmcreations.shredder.home.data.models.asBookmark
 import dev.bmcreations.shredder.home.data.models.edit
-import dev.bmcreations.shredder.home.ui.DeleteBookmark
-import dev.bmcreations.shredder.home.ui.LoadById
-import dev.bmcreations.shredder.home.ui.UpdateBookmark
 import dev.bmcreations.shredder.home.effects.fetchBookmark
+import dev.bmcreations.shredder.home.ui.state.EditRequest
 import dev.bmcreations.shredder.models.Bookmark
 import dev.bmcreations.shredder.ui.state.UiState
-
-sealed class EditRequest {
-    object New : EditRequest()
-    data class Edit(val bookmark: Bookmark, val requestCall: LoadById) : EditRequest()
-    data class Delete(val bookmark: Bookmark, val deleteCall: DeleteBookmark): EditRequest()
-    data class UndoDelete(val bookmark: Bookmark, val upsertCall: UpdateBookmark): EditRequest()
-    object Nothing : EditRequest()
-}
 
 @OptIn(ExperimentalLayout::class)
 @Composable
@@ -43,7 +33,7 @@ fun EditDialog(
     when (val edit = request.value) {
         EditRequest.New -> EditDialog(EditModel(label = "", url = ""), sheetState, save)
         is EditRequest.Edit -> {
-            val bookmarkState = with(edit) { fetchBookmark(bookmark.id, requestCall) }
+            val bookmarkState = with(edit) { fetchBookmark(bookmark.id, library) }
             if (bookmarkState is UiState.Success<Bookmark>) {
                 EditDialog(bookmarkState.data.edit(), sheetState, save)
             } else if (bookmarkState is UiState.Error) {

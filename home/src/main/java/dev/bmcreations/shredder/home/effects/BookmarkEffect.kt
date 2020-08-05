@@ -1,16 +1,16 @@
 package dev.bmcreations.shredder.home.effects
 
 import androidx.compose.*
-import dev.bmcreations.shredder.home.ui.LoadById
+import dev.bmcreations.shredder.bookmarks.Library
 import dev.bmcreations.shredder.models.Bookmark
 import dev.bmcreations.shredder.ui.state.UiState
 
 @Composable
-fun fetchBookmark(bookmarkId: String?, editCall: LoadById): UiState<Bookmark> {
+fun fetchBookmark(bookmarkId: String?, library: Library): UiState<Bookmark> {
 
     var fetchState: UiState<Bookmark> by state { UiState.Loading }
 
-    editCall(bookmarkId) { result ->
+    library.findById(bookmarkId) { result ->
         fetchState = when {
             result.isSuccess -> {
                 val data = result.getOrNull()

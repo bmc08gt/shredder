@@ -19,10 +19,10 @@ sealed class UiState<out T> {
 fun EditModel.asBookmark(): Bookmark {
     return when (id) {
         null -> Bookmark(label = label.orEmpty(), site = Website(url.orEmpty()), createdAt = Date())
-        else -> Bookmark(id = id, label = label.orEmpty(), site = Website(url.orEmpty()), createdAt = createdAt)
+        else -> Bookmark(id = id, label = label.orEmpty(), site = Website(url.orEmpty()), createdAt = createdAt ?: Date())
     }
 }
 
-fun Bookmark?.edit(): EditModel {
-    return EditModel(id = this?.id, label = this?.label, url = this?.site?.url, createdAt = this?.createdAt)
+fun Bookmark.edit(): EditModel {
+    return EditModel(id = id, label = label, url = site.url, createdAt = createdAt)
 }

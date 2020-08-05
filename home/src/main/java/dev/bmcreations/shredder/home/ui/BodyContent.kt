@@ -2,6 +2,7 @@ package dev.bmcreations.shredder.home.ui
 
 import androidx.compose.Composable
 import androidx.compose.MutableState
+import androidx.compose.collectAsState
 import androidx.ui.core.Alignment
 import androidx.ui.core.Modifier
 import androidx.ui.foundation.Icon
@@ -13,8 +14,8 @@ import androidx.ui.material.*
 import androidx.ui.material.icons.Icons
 import androidx.ui.material.icons.filled.Add
 import androidx.ui.unit.dp
-import dev.bmcreations.shredder.home.ui.edit.EditRequest
-import dev.bmcreations.shredder.models.Bookmark
+import dev.bmcreations.shredder.bookmarks.Library
+import dev.bmcreations.shredder.home.ui.state.EditRequest
 import dev.bmcreations.shredder.ui.snack.TransientSnackbar
 import dev.bmcreations.shredder.ui.snack.SnackbarState
 
@@ -23,10 +24,7 @@ internal fun BodyContent(
     scaffoldState: ScaffoldState,
     snackbarState: SnackbarState,
     editState: MutableState<EditRequest>,
-    bookmarks: List<Bookmark>,
-    loadById: LoadById,
-    delete: DeleteBookmark,
-    undo: UpdateBookmark
+    library: Library
 ) {
     Scaffold(
         scaffoldState = scaffoldState,
@@ -35,10 +33,10 @@ internal fun BodyContent(
             Stack(modifier = Modifier.padding(top = 8.dp)) {
                 BookmarkList(
                     modifier = Modifier.padding(innerPadding),
-                    bookmarks = bookmarks,
-                    onEdit = { editState.value = EditRequest.Edit(this, loadById) },
+                    library = library,
+                    onEdit = { editState.value = EditRequest.Edit(this, library) },
                     onDelete = {
-                        editState.value = EditRequest.Delete(this, delete)
+                        editState.value = EditRequest.Delete(this, library)
                         snackbarState.show = true
                     }
                 )
@@ -53,9 +51,7 @@ internal fun BodyContent(
                             is EditRequest.Delete -> state.bookmark
                             else -> null
                         }
-                        bookmark?.let {
-                            editState.value = EditRequest.UndoDelete(it, undo)
-                        }
+                        bookmark?.let { editState.value = EditRequest.UndoDelete(it, library) }
                     },
                     onDismiss = { editState.value = EditRequest.Nothing }
                 )

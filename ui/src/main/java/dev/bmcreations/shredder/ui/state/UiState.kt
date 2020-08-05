@@ -7,7 +7,7 @@ typealias RepositoryCallFiltered<S, T> = (S, (Result<T>) -> Unit) -> Unit
 
 sealed class UiState<out T> {
     object Loading : UiState<Nothing>()
-    data class Success<out T>(val data: T?) : UiState<T>()
+    data class Success<out T>(val data: T) : UiState<T>()
     data class Error(val exception: Throwable?) : UiState<Nothing>()
 }
 
@@ -29,7 +29,7 @@ fun <T> uiStateFrom(
     onActive {
         repositoryCall { result ->
             state = when {
-                result.isSuccess -> UiState.Success(result.getOrNull())
+                result.isSuccess -> UiState.Success(result.getOrThrow())
                 result.isFailure -> UiState.Error(result.exceptionOrNull())
                 else -> state
             }
@@ -51,7 +51,7 @@ fun <S, T> uiStateFrom(
     onActive {
         repositoryCall(arg) { result ->
             state = when {
-                result.isSuccess -> UiState.Success(result.getOrNull())
+                result.isSuccess -> UiState.Success(result.getOrThrow())
                 result.isFailure -> UiState.Error(result.exceptionOrNull())
                 else -> state
             }

@@ -1,6 +1,7 @@
 package dev.bmcreations.shredder.home.ui
 
 import androidx.compose.Composable
+import androidx.compose.collectAsState
 import androidx.ui.core.ContextAmbient
 import androidx.ui.core.LayoutDirection
 import androidx.ui.core.Modifier
@@ -13,6 +14,7 @@ import androidx.ui.material.Card
 import androidx.ui.material.ListItem
 import androidx.ui.unit.dp
 import coil.request.GetRequest
+import dev.bmcreations.shredder.bookmarks.Library
 import dev.bmcreations.shredder.models.Bookmark
 import dev.bmcreations.shredder.models.favicon
 import dev.bmcreations.shredder.ui.gestures.swipeToDelete
@@ -21,11 +23,12 @@ import dev.chrisbanes.accompanist.coil.CoilImage
 @Composable
 internal fun BookmarkList(
     modifier: Modifier = Modifier,
-    bookmarks: List<Bookmark>,
+    library: Library,
     onEdit: Bookmark.() -> Unit,
     onDelete: Bookmark.() -> Unit
 ) {
-    LazyColumnItems(modifier = modifier, items = bookmarks) { bookmark ->
+    val bookmarks = library.observeBookmarks().collectAsState(initial = emptyList())
+    LazyColumnItems(modifier = modifier, items = bookmarks.value) { bookmark ->
         BookmarkCard(bookmark = bookmark, onClick = onEdit, onDelete)
     }
 }
